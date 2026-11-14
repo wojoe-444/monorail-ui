@@ -35,6 +35,8 @@ export function AppShell({ sections, topBarActions }: { sections: NavSection[]; 
   const current = found?.item
   const Page = current?.page ?? NotFoundPage
   const full = current?.layout === 'full'
+  // A hidden subpage (a detail page) lights up its parent in the drawer.
+  const navCurrent = current?.hidden && found?.parent ? found.parent.path : (current?.path ?? path)
 
   // A new page starts at the top, and the document title follows it.
   useEffect(() => {
@@ -51,7 +53,7 @@ export function AppShell({ sections, topBarActions }: { sections: NavSection[]; 
   return (
     <TooltipProvider>
       <div className="flex h-full overflow-hidden">
-        <SideNav sections={sections} current={current?.path ?? path} onNavigate={navigate} collapsed={collapsed} />
+        <SideNav sections={sections} current={navCurrent} onNavigate={navigate} collapsed={collapsed} />
         <div ref={body} className={cn('flex min-w-0 flex-1 flex-col', full ? 'overflow-hidden' : 'overflow-y-auto')}>
           <TopBar
             section={found?.section.heading}

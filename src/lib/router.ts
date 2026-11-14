@@ -5,9 +5,17 @@ import { useCallback, useSyncExternalStore } from 'react'
  * build is opened from file:// (Electron) or a static host. Paths look like
  * "/settings" (URL "#/settings"). Pages are registered in src/app/routes.tsx.
  *
+ * Navigate from code with `navigate('/path')`. For a real link (open in new
+ * tab, hover shows the URL) use `<a href={href('/path')}>`.
+ *
  * If an app outgrows this (nested layouts, loaders, URL params), swap in a
- * real router; only src/app/AppShell.tsx and this file need to change.
+ * real router; only src/components/layout/AppShell.tsx and this file need to change.
  */
+
+/** The href for a route, for plain <a> links: href('/settings') === '#/settings'. */
+export function href(path: string): string {
+  return `#${path.startsWith('/') ? path : `/${path}`}`
+}
 
 /** Current route path, e.g. "/settings" or "/reports?range=30d". */
 export function currentPath(): string {

@@ -7,7 +7,7 @@ A ready-made React app frame for starting new apps without redoing the design ea
 - **Components:** buttons, cards, form controls, dialogs, menus, tooltips, KPI tiles and sparklines, as editable source in `src/components/`.
 - **Agent instructions:** [`AGENTS.md`](./AGENTS.md) (and `CLAUDE.md`) tell coding agents how to add pages and which tokens and components to use.
 
-Stack: React 19, TypeScript, Vite, Tailwind CSS v4, Radix, lucide-react. Components follow shadcn/ui conventions, so `npx shadcn@latest add <component>` adds more that match.
+Stack: React 19, TypeScript, Vite, Tailwind CSS v4, Radix, lucide-react. Components follow shadcn/ui conventions, so `npm run ui:add -- <component>` adds more that match.
 
 ## Start a new app
 
@@ -32,6 +32,7 @@ The new app owns its copy. Later changes to this template don't flow into apps a
 | `npm run typecheck` | TypeScript check |
 | `npm run build` | Typecheck and build to `dist/` (relative asset paths, so it also loads from `file://`) |
 | `npm run preview` | Serve the built app |
+| `npm run ui:add -- <name>` | Add shadcn/ui components, wired to this app's `cn` helper |
 
 ## Licenses
 

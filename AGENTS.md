@@ -9,9 +9,10 @@ npm install
 npm run dev        # Vite dev server
 npm run typecheck  # tsc --noEmit
 npm run build      # typecheck + production build into dist/
+npm run ui:add -- tabs table   # add shadcn/ui components (see "Components first")
 ```
 
-Run `npm run typecheck` and `npm run build` before you call a change done.
+Run `npm run typecheck` and `npm run build` before you call a change done. Code style is in `.prettierrc.json`: single quotes, no semicolons.
 
 ## Stack
 
@@ -31,7 +32,7 @@ React 19, TypeScript (strict), Vite, Tailwind CSS v4, Radix primitives (`radix-u
 | `src/lib/theme.ts` | Mode + palette store: `useThemeMode`, `usePalette`, `setThemeMode`, `setPalette`. |
 | `src/lib/palettes.ts` | The color schemes. Each expands into every color token. |
 | `src/lib/prefs.ts` | `prefs` / `readJson` / `writeJson`: localStorage that survives storage being unavailable. |
-| `src/lib/router.ts` | Hash router: `useRoute`, `navigate`, `useSearchParams`. |
+| `src/lib/router.ts` | Hash router: `useRoute`, `navigate`, `href`, `useSearchParams`. |
 | `src/styles/theme.css` | Token defaults, the Tailwind `@theme` mapping, base styles. |
 
 Feature code that isn't a page goes in `src/features/<feature>/` (components, hooks, API calls for that feature). Shared hooks go in `src/hooks/`.
@@ -43,7 +44,8 @@ Feature code that isn't a page goes in `src/features/<feature>/` (components, ho
    - Put it in an existing section or add a `{ heading: 'Section', items: [...] }`.
    - Subpages: add `children: [...]` to an item (one level deep). The breadcrumb shows Section > Parent > Page.
    - Canvas, editor or map pages: add `layout: 'full'` (no padding or max width, and the page handles its own scrolling).
-   - Detail pages that shouldn't be in the drawer: add `hidden: true` and pass the id as a query, e.g. `navigate('/things/detail?id=42')` then `useSearchParams().get('id')`.
+   - Detail pages that shouldn't be in the drawer: add them as a `hidden: true` child of the list page, so the breadcrumb reads Section > Things > Thing and the drawer keeps Things highlighted. Pass the id as a query: `navigate('/things/detail?id=42')`, then `useSearchParams().get('id')` in the page.
+   - Links: use `navigate('/path')` in click handlers, and `<a href={href('/path')}>` for real links (rows, cards, text links) so open-in-new-tab works. Both come from `@/lib/router`.
 3. Start the page the standard way:
 
 ```tsx
@@ -77,9 +79,9 @@ export function ThingsPage() {
 
 Opacity modifiers are fine (`bg-primary/10`). Status hues mean the same thing in every palette: green = good, amber = needs attention, red = error or destructive, blue = information. Don't use them for decoration.
 
-**Components first.** Use the kit before writing markup: `Button` (variants `default`, `soft`, `outline`, `secondary`, `ghost`, `link`, `destructive`; sizes `sm`, `default`, `lg`, `icon`), `Card` + `CardHeader`/`CardTitle`/`CardDescription`/`CardAction`/`CardContent`/`CardFooter`, `Badge` for status, `Dialog` for modal tasks, `DropdownMenu` for row actions, `Tooltip` for icon-only buttons, `Segmented` for 2–4 view options, `NativeSelect` for picking from a list, `Switch` for on/off settings, `StatTile` for KPIs.
+**Components first.** Use the kit before writing markup: `Button` (variants `default`, `soft`, `outline`, `secondary`, `ghost`, `link`, `destructive`; sizes `sm`, `default`, `lg`, `icon`), `Card` + `CardHeader`/`CardTitle`/`CardDescription`/`CardAction`/`CardContent`/`CardFooter`, `Badge` for status, `Dialog` for modal tasks, `DropdownMenu` for row actions, `Tooltip` for icon-only buttons, `Segmented` for a compact 2–4 option toggle (view mode, filter, time range), `NativeSelect` for picking from a list, `Switch` for on/off settings, `StatTile` for KPIs.
 
-Need a component the kit doesn't have (table, tabs, popover, sheet, command, calendar)? Add it with the shadcn CLI, e.g. `npx shadcn@latest add tabs`. `components.json` is set up, so it lands in `src/components/ui/` and picks up the tokens automatically. Check that its colors use token classes after adding it.
+Need a component the kit doesn't have (tabs for switching between panels of content, table, popover, sheet, command, calendar)? Add it with **`npm run ui:add -- <name>`**, not `npx shadcn add` directly. The wrapper runs the shadcn CLI, so the file lands in `src/components/ui/` styled with the theme tokens. Then it points the new file's `cn` import at `@/lib/utils`, because shadcn 4 otherwise adds a separate `cn` npm package. Afterwards, check the new component's colors are token classes. Restyle surfaces to match the kit if needed (e.g. active states use `bg-card shadow-elevation-1` like `Segmented`).
 
 **Layout and spacing.**
 - Blocks on a page: `flex flex-col gap-8`. Cards in a grid: `gap-4`. Inside a card: `gap-4` or `gap-6`.
@@ -96,7 +98,7 @@ Need a component the kit doesn't have (table, tabs, popover, sheet, command, cal
 ## Theme
 
 - The person picks mode and palette in Settings > Appearance, or toggles light/dark in the top bar. The choice is saved under `APP.storagePrefix`.
-- To change the app's default look, set `defaultMode` / `defaultPalette` in `src/app/config.ts` (palette ids are in `src/lib/palettes.ts`). Also update the `:root` defaults in `src/styles/theme.css` if you want first paint to match exactly.
+- To change the app's default look, set `defaultMode` / `defaultPalette` in `src/app/config.ts` (palette ids are in `src/lib/palettes.ts`). That's all it takes: the theme is applied before React's first render. The `:root` values in `theme.css` only show for the instant before the script loads.
 - To add a brand palette, add an entry to `PALETTES` in `src/lib/palettes.ts` (primary hue/chroma, neutral hue/chroma, drawer style). Don't edit token values in `theme.css` to restyle. `theme.ts` overwrites them at runtime.
 - Read the current mode with `useThemeMode()` when code needs it (e.g. a chart library's theme option).
 
@@ -109,7 +111,7 @@ Need a component the kit doesn't have (table, tabs, popover, sheet, command, cal
 
 ## Starting a new app from this template
 
-1. Set `name`, `tagline` and `storagePrefix` in `src/app/config.ts`, `"name"` in `package.json`, and `<title>` in `index.html`.
-2. Replace the sample content: `HomePage`, the Projects group and the Reference section in `src/app/routes.tsx`. Keep `ComponentsPage` while it's useful as a reference.
-3. Optionally, replace the `BrandTile` initial with a logo, and `public/favicon.svg`.
+1. Set `name`, `tagline` and `storagePrefix` in `src/app/config.ts`, `"name"` in `package.json` (then `npm install` to sync the lockfile), and `<title>` in `index.html`.
+2. Replace the sample content: `HomePage`, and the Projects group and Reference section in `src/app/routes.tsx`. Taking `ComponentsPage` out of the routes is fine. Keep the file as a usage reference until the app no longer needs it, then delete it. Delete `PlaceholderPage` once no route uses it.
+3. Replace `public/favicon.svg` (it shows an "M"). Optionally swap the `BrandTile` initial for a logo.
 4. Rewrite `README.md` for the app.
