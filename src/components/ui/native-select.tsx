@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ChevronDownIcon } from 'lucide-react'
 
-import { cn } from '../../lib/utils.js'
+import { cn } from '@/lib/utils'
 
 /** Styled native <select>: keyboard and screen-reader behavior for free. */
 function NativeSelect({ className, children, ...props }: React.ComponentProps<'select'>) {

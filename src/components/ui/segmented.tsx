@@ -1,6 +1,6 @@
 import { RadioGroup } from 'radix-ui'
 
-import { cn } from '../../lib/utils.js'
+import { cn } from '@/lib/utils'
 
 interface SegmentedProps<T extends string> {
   value: T
@@ -18,7 +18,7 @@ export function Segmented<T extends string>({ value, onChange, options, classNam
       orientation="horizontal"
       value={value}
       onValueChange={(next) => onChange(next as T)}
-      className={cn('inline-flex h-9 items-center gap-1 rounded-lg border bg-muted p-1', className)}
+      className={cn('inline-flex h-9 w-fit items-center gap-1 rounded-lg border bg-muted p-1', className)}
     >
       {options.map((option) => (
         <RadioGroup.Item

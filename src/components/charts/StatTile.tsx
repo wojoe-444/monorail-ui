@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react'
 
-import { Card } from '../ui/card.js'
-import { formatSignedPercent } from './format.js'
-import { cn } from '../../lib/utils.js'
+import { Card } from '@/components/ui/card'
+import { formatSignedPercent } from './format'
+import { cn } from '@/lib/utils'
 
 interface StatTileProps {
   label: string

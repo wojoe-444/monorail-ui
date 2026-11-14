@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Slider as SliderPrimitive } from 'radix-ui'
 
-import { cn } from '../../lib/utils.js'
+import { cn } from '@/lib/utils'
 
 /** Range or single-value slider (shadcn Slider). Thumbs move with the arrow keys, Page Up/Down and Home/End. */
 function Slider({ className, value, defaultValue, thumbLabels, ...props }: React.ComponentProps<typeof SliderPrimitive.Root> & { thumbLabels?: string[] }) {

@@ -1,4 +1,4 @@
-import { cn } from '../../lib/utils.js'
+import { cn } from '@/lib/utils'
 
 /**
  * Tiny trend line for KPI tiles (from the Bot Dashboard): a 2px line over a

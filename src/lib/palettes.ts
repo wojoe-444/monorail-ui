@@ -3,11 +3,11 @@
  * (dashboard/web/src/theme.ts) so both apps share one look and one picker.
  *
  * Each palette is a handful of parameters; `tokens()` expands it into the
- * full set of MonoRail CSS variables (the ones `index.css` defines) for light
+ * full set of MonoRail CSS variables (the ones `src/styles/theme.css` defines) for light
  * or dark mode. Status colors (success / warning / info / destructive) keep
  * the same hues in every palette so their meaning never changes, and the
  * chart series (`--series-*`) are not part of a palette at all: they stay the
- * validated fixed order in index.css.
+ * validated fixed order in src/styles/theme.css.
  */
 
 export type SidebarStyle = 'dark' | 'light' | 'bold'

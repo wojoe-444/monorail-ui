@@ -1,6 +1,6 @@
 /**
  * Categorical series colors, as CSS variables (light/dark values live in
- * index.css). Assign slots in this fixed order to entities ranked once on the
+ * src/styles/theme.css). Assign slots in this fixed order to entities ranked once on the
  * full dataset, so a filter never repaints a series. More than six series fold
  * into "Other".
  */

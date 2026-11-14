@@ -1,4 +1,4 @@
-import { cn } from '../../lib/utils.js'
+import { cn } from '@/lib/utils'
 
 interface LegendProps {
   items: { key: string; label?: string; color: string }[]

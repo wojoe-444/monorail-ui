@@ -1,15 +1,17 @@
-@import "tailwindcss" source(none);
+@import "tailwindcss";
 @import "tw-animate-css";
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/jetbrains-mono";
-
-@source "./components";
 
 @custom-variant dark (&:is(.dark *));
 
 /*
  * MonoRail color system
  * ---------------------
+ * Every color in the app comes from the tokens below. Use them through
+ * Tailwind classes (bg-card, text-muted-foreground, bg-success-soft, ...),
+ * never raw hex or Tailwind's own palette (bg-blue-500). See AGENTS.md.
+ *
  * The look and the color schemes come from the Bot Dashboard in
  * wojoe-444/MC-Player. A scheme ("palette") is a few parameters in
  * src/lib/palettes.ts that expand into every token below, for light and dark.
@@ -206,6 +208,11 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
   }
   html {
     font-family: var(--font-sans);
