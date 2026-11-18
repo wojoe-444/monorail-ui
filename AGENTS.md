@@ -25,8 +25,8 @@ React 19, TypeScript (strict), Vite, Tailwind CSS v4, Radix primitives (`radix-u
 | `src/app/config.ts` | App name, tagline, storage prefix, default theme. Edit first in a new app. |
 | `src/app/routes.tsx` | Every page and the drawer's sections. **The one place to add a page.** |
 | `src/pages/` | One file per page. |
-| `src/components/layout/` | `AppShell`, `SideNav`, `TopBar`, `PageHeader`, `PageTabs`, `PageSteps`, `BrandMark`, nav types. |
-| `src/components/ui/` | The UI kit (Button, Card, Dialog, …). |
+| `src/components/layout/` | `AppShell`, `SideNav`, `TopBar`, `TopBarPortal`, `PageHeader` and the other header styles (see "Choosing a page header"), `PageTabs`, `PageSteps`, `BrandMark`, nav types. |
+| `src/components/ui/` | The UI kit (Button, Card, Dialog, `SearchField`, …). |
 | `src/components/charts/` | `StatTile`, `Sparkline`, `Legend`, `ChartTooltipContent`, series colors. |
 | `src/components/theme/ThemePicker.tsx` | Appearance card used on the Settings page. |
 | `src/lib/theme.ts` | Mode + palette store: `useThemeMode`, `usePalette`, `setThemeMode`, `setPalette`. |
@@ -92,6 +92,26 @@ export function ThingPage() {
 
 Full examples: `src/pages/TabbedPageExample.tsx` and `src/pages/StepsPageExample.tsx`.
 
+`PageTabs` also has `variant="underline"` (used by `EntityHeader`), `variant="side"` (a vertical list, used by `SplitPage`) and `size="sm"` (fits the top bar, used with `PageCommandBar`).
+
+### Choosing a page header
+
+Pick the header by the kind of page, not page by page. All of them are in `src/components/layout/`, and each has a live example under Reference > Page headers (`src/pages/headers/`).
+
+| Kind of page | Header | Notes |
+| --- | --- | --- |
+| Most pages | `PageHeader` | Title, one line, actions. Skip `eyebrow` when it would repeat the breadcrumb. |
+| Tools, editors, dense data | `PageCommandBar` | Title, tabs (`PageTabs size="sm" sticky={false}`) and actions go in the top bar. Draws nothing in the body on desktop. |
+| Dashboards, reports | `SummaryHeader` | 2–4 `metrics` next to the title, in place of a row of `StatTile`s. `controls` holds the time range. |
+| Home, a section's front door | `PageBanner` | Tinted band, large title, `SearchField size="lg"`, shortcuts, optional `aside` card. One or two pages per app at most. |
+| Detail pages | `EntityHeader` | Icon tile, title, status `badges`, `meta` facts, `tabs` as underline tabs. Render it first; it bleeds into the page padding. |
+| Lists, tables, inboxes | `ListHeader` + `ListToolbar` | Toolbar holds `SearchField size="sm"`, `FilterChip`s, `AddFilterButton`, sort, view. Pass `selectedCount` to turn it into the bulk-action bar. |
+| Settings, forms, docs | `SplitPage` | Wraps the whole page: sticky left column (title, a paragraph, `nav` sections, `aside` link), content on the right. |
+| Long reading pages | `CollapsingHeader` | Large title that moves into the top bar once it scrolls away. |
+| Create / edit flows | `TaskBar` | Top bar becomes Close, title, `steps`, a save `status` and the commit button. Put the body in `mx-auto w-full max-w-2xl`. |
+
+Every header renders the page's one `h1`. `PageCommandBar`, `CollapsingHeader` and `TaskBar` put content in the top bar through `TopBarPortal` (`src/components/layout/TopBarSlot.tsx`); use it directly if a page needs something else up there. It replaces the breadcrumb while mounted (pass `replaceBreadcrumb={false}` to sit beside it).
+
 ## Design rules
 
 **Colors: tokens only.** Every color comes from the theme tokens through Tailwind classes. Never use hex, `rgb()`, or Tailwind's own palette (`bg-blue-500`, `text-gray-600`). Those don't follow the palette or dark mode.
@@ -119,7 +139,7 @@ Need a component the kit doesn't have (tabs that switch panels inside a card, ta
 - Responsive grids always set a base column: `grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4`. Without `grid-cols-1`, the column grows to fit its content and the page scrolls sideways on phones.
 - Give flex children that hold long text `min-w-0` and the text `truncate`.
 - One primary (`default`) button per view. Everything else is `outline`, `ghost`, `soft` or `secondary`.
-- Page titles come from `PageHeader`. Don't add another `h1`.
+- Page titles come from `PageHeader` or one of the other headers (see "Choosing a page header"). Don't add another `h1`.
 - Radius comes from the theme (`rounded-md`, `rounded-lg`, `rounded-xl`). Don't use arbitrary values.
 
 **Type.** Inter is the UI font, JetBrains Mono (`font-mono`) is for code and ids. Use `tabular-nums` for numbers that line up. Sizes: `text-2xl` page titles (in PageHeader), `text-sm` body, `text-xs` meta and labels.
