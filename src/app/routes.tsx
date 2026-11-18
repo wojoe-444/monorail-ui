@@ -11,6 +11,7 @@ import {
   List,
   ListOrdered,
   PanelTop,
+  Rows3,
   Settings,
   Shapes,
   TrainFront,
@@ -18,6 +19,7 @@ import {
 
 import type { NavSection } from '@/components/layout/nav'
 import { ComponentsPage } from '@/pages/ComponentsPage'
+import { DenseOverviewExample } from '@/pages/DenseOverviewExample'
 import { HomePage } from '@/pages/HomePage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { SettingsPage } from '@/pages/SettingsPage'
@@ -45,8 +47,8 @@ import { WikiTimelinePage } from '@/pages/wiki/WikiTimelinePage'
  *
  * The Projects group, the Wiki drafts section and the Reference section are
  * examples: replace them.
- * Keep TabbedPageExample / StepsPageExample as usage references until the
- * app has its own PageTabs / PageSteps pages.
+ * Keep TabbedPageExample / StepsPageExample / DenseOverviewExample as usage
+ * references until the app has its own pages of that kind.
  */
 export const NAV: NavSection[] = [
   {
@@ -87,6 +89,7 @@ export const NAV: NavSection[] = [
       { path: '/components', label: 'Components', icon: Shapes, page: ComponentsPage },
       { path: '/examples/tabs', label: 'Page tabs', icon: PanelTop, page: TabbedPageExample },
       { path: '/examples/steps', label: 'Step flow', icon: ListOrdered, page: StepsPageExample },
+      { path: '/examples/dense', label: 'Dense overview', icon: Rows3, page: DenseOverviewExample },
     ],
   },
   {
