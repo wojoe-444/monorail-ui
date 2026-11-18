@@ -4,6 +4,7 @@ import {
   Database,
   FileText,
   FolderKanban,
+  GraduationCap,
   History,
   LayoutDashboard,
   LayoutGrid,
@@ -11,6 +12,7 @@ import {
   List,
   ListOrdered,
   Map as MapIcon,
+  MonitorPlay,
   PanelTop,
   PanelsTopLeft,
   Rows3,
@@ -24,6 +26,7 @@ import {
 import type { NavItem, NavSection } from '@/components/layout/nav'
 import { ANNOTATED_PAGES } from '@/features/lab/annotated/pages'
 import { EXPERIMENTS, GROUP_LABELS, GROUP_ORDER, type ExperimentGroup } from '@/features/lab/catalog'
+import { HOME_MOCKUPS, PAGE_MOCKUPS, type Mockup } from '@/features/learning/mockups'
 import { NARRATIVE_PAGES } from '@/features/lab/narrative/pages'
 import { CatalogPage } from '@/pages/CatalogPage'
 import { ComponentsPage } from '@/pages/ComponentsPage'
@@ -38,6 +41,7 @@ import { SplitPageExample } from '@/pages/headers/SplitPageExample'
 import { SummaryHeaderExample } from '@/pages/headers/SummaryHeaderExample'
 import { TaskBarExample } from '@/pages/headers/TaskBarExample'
 import { HomePage } from '@/pages/HomePage'
+import { LearningHomesPage, LearningPagesPage } from '@/pages/learning/LearningIndexPage'
 import { AlmanacPage } from '@/pages/lab/AlmanacPage'
 import { AskPage } from '@/pages/lab/AskPage'
 import { AtlasPage } from '@/pages/lab/AtlasPage'
@@ -138,6 +142,8 @@ const dashboardGroups: NavItem[] = GROUP_ORDER.map((g) => ({
   })),
 }))
 
+const mockupChild = ({ path, label, page, layout, description }: Mockup): NavItem => ({ path, label, page, layout, description })
+
 export const NAV: NavSection[] = [
   {
     items: [{ path: '/', label: 'Catalog', icon: LayoutDashboard, page: CatalogPage }],
@@ -217,6 +223,27 @@ export const NAV: NavSection[] = [
           { path: '/wiki/glossary', label: 'Glossary', icon: BookA, page: WikiGlossaryPage, description: 'Terms A to Z.' },
           { path: '/wiki/timeline', label: 'Timeline', icon: History, page: WikiTimelinePage, description: 'Events in order.' },
         ],
+      },
+    ],
+  },
+  {
+    heading: 'Learning hub',
+    items: [
+      {
+        path: '/learn/homes',
+        label: 'Home pages',
+        icon: GraduationCap,
+        page: LearningHomesPage,
+        description: 'Six takes on a learning hub’s front page, from search-first to a curriculum map.',
+        children: HOME_MOCKUPS.map(mockupChild),
+      },
+      {
+        path: '/learn/pages',
+        label: 'Content pages',
+        icon: MonitorPlay,
+        page: LearningPagesPage,
+        description: 'Twelve kinds of learning page: how-to, video series, article, path, quiz, lab and more.',
+        children: PAGE_MOCKUPS.map(mockupChild),
       },
     ],
   },
