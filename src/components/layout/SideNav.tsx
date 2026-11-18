@@ -67,7 +67,15 @@ export function SideNav({ sections, current, onNavigate, collapsed }: SideNavPro
         )}
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-4 py-4" aria-label="Main">
+      <nav
+        className={cn(
+          'min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-4 py-4',
+          // Keep the narrow rail centered without a native scrollbar taking icon space.
+          // Overflow still scrolls with the wheel, touch, and keyboard focus.
+          collapsed && '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
+        )}
+        aria-label="Main"
+      >
         {mainSections.map((section, i) => {
           const items = visibleItems(section.items)
           if (items.length === 0) return null
@@ -131,6 +139,7 @@ function NavButton({
       type="button"
       onClick={() => onNavigate(item.path)}
       aria-current={active ? 'page' : undefined}
+      aria-label={collapsed ? item.label : undefined}
       className={cn(
         'relative flex h-10 w-full items-center gap-3 rounded-md px-3 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
         collapsed && 'justify-center px-0',

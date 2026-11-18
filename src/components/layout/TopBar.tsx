@@ -39,21 +39,21 @@ export function TopBar({ section, parent, onNavigate, title, collapsed, onToggle
       </Button>
       <span className="h-6 w-px bg-border" aria-hidden />
       <nav aria-label="Breadcrumb" className="flex min-w-0 flex-1 items-center gap-1.5 text-sm">
-        <span className="hidden shrink-0 text-muted-foreground sm:inline">{section ?? APP.name}</span>
+        <span className="hidden min-w-0 max-w-[40%] truncate text-muted-foreground sm:inline">{section ?? APP.name}</span>
         <ChevronRight className="hidden size-3.5 shrink-0 text-muted-foreground sm:block" aria-hidden />
         {parent && (
           <>
             <button
               type="button"
               onClick={() => onNavigate?.(parent.path)}
-              className="shrink-0 rounded-sm text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+              className="min-w-0 max-w-[40%] truncate rounded-sm text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
             >
               {parent.label}
             </button>
             <ChevronRight className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
           </>
         )}
-        <span className="truncate font-medium" aria-current="page">
+        <span className="min-w-0 flex-1 truncate font-medium" aria-current="page">
           {title}
         </span>
       </nav>
