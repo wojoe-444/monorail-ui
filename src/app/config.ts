@@ -5,9 +5,9 @@
  * (localhost:5173 is shared by every app you run in development).
  */
 export const APP = {
-  name: 'My App',
-  tagline: 'Built on MonoRail UI',
-  storagePrefix: 'my-app',
+  name: 'MonoRail UI',
+  tagline: 'Components, pages and dashboards',
+  storagePrefix: 'monorail-ui',
   /** Light or dark until the person picks one in Settings > Appearance. */
   defaultMode: 'light' as 'light' | 'dark',
   /** A palette id from src/lib/palettes.ts. */
