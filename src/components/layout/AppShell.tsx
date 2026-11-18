@@ -54,7 +54,7 @@ export function AppShell({ sections, topBarActions }: { sections: NavSection[]; 
     <TooltipProvider>
       <div className="flex h-full overflow-hidden">
         <SideNav sections={sections} current={navCurrent} onNavigate={navigate} collapsed={collapsed} />
-        <div ref={body} className={cn('flex min-w-0 flex-1 flex-col', full ? 'overflow-hidden' : 'overflow-y-auto')}>
+        <div ref={body} data-slot="app-body" className={cn('flex min-w-0 flex-1 flex-col', full ? 'overflow-hidden' : 'overflow-y-auto')}>
           <TopBar
             section={found?.section.heading}
             parent={found?.parent ? { label: found.parent.label, path: found.parent.path } : undefined}
