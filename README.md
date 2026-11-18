@@ -4,7 +4,7 @@ A ready-made React app frame for starting new apps without redoing the design ea
 
 - **App layout:** a collapsible side drawer with sections and subpage groups, a top bar with breadcrumbs, and a light/dark toggle.
 - **Theme:** 31 color schemes in light and dark, picked in Settings and remembered, all built on one set of color tokens.
-- **Components:** buttons, cards, form controls, dialogs, menus, tooltips, KPI tiles and sparklines, as editable source in `src/components/`.
+- **Components:** buttons, cards, form controls, dialogs, menus, tooltips, a file tree, KPI tiles and sparklines, as editable source in `src/components/`.
 - **Agent instructions:** [`AGENTS.md`](./AGENTS.md) (and `CLAUDE.md`) tell coding agents how to add pages and which tokens and components to use.
 
 Stack: React 19, TypeScript, Vite, Tailwind CSS v4, Radix, lucide-react. Components follow shadcn/ui conventions, so `npm run ui:add -- <component>` adds more that match.
