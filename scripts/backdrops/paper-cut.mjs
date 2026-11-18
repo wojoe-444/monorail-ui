@@ -1,5 +1,5 @@
 import { rng } from './lib.mjs'
-import { f1, lgu, ridgePts, smooth } from './_art-helpers.mjs'
+import { lgu, ridgePts, smooth } from './_art-helpers.mjs'
 
 /** Paper Cut: stacked paper hills and mountains in one tight colour ramp, each layer shading the one behind. */
 

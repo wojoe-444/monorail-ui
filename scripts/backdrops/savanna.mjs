@@ -76,7 +76,6 @@ function tuft(rand, x, y, h, n = 7) {
 export default {
   id: 'savanna',
   draw() {
-    const rand = rng(1957)
     const SUN = [1040, 640]
     let defs = lgu('sky', 0, 720, [
       [0, '#6b3a5a'],

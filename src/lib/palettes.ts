@@ -327,8 +327,8 @@ export const PALETTES: Palette[] = [
     backdrop: BACKDROPS.riceTerraces,
   },
   {
-    id: 'coral-reef',
-    name: 'Coral Reef',
+    id: 'sunlit-reef',
+    name: 'Sunlit Reef',
     blurb: 'Light rays over a reef; drawer on the dark coral, page on a sheet',
     ph: 30, pc: 0.14, nh: 220, nc: 0.014, sidebar: 'dark', sh: 230,
     backdrop: BACKDROPS.coralReef,

@@ -1,5 +1,5 @@
 import { glow, lg, rng } from './lib.mjs'
-import { bigCloud, blur, blurU, cloud, cloudFilter, f, fbm, grain, smooth, taper } from './_day-helpers.mjs'
+import { bigCloud, blur, cloud, cloudFilter, f, fbm, grain, smooth, taper } from './_day-helpers.mjs'
 
 const pt = (p) => `${f(p[0])} ${f(p[1])}`
 
