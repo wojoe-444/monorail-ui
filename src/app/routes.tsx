@@ -1,12 +1,28 @@
-import { FolderKanban, House, ListOrdered, PanelTop, Settings, Shapes } from 'lucide-react'
+import { Map as MapIcon, Settings, Shapes } from 'lucide-react'
 
-import type { NavSection } from '@/components/layout/nav'
+import type { NavItem, NavSection } from '@/components/layout/nav'
+import { ANNOTATED_PAGES } from '@/features/lab/annotated/pages'
+import { EXPERIMENTS, GROUP_LABELS, type ExperimentGroup } from '@/features/lab/catalog'
+import { NARRATIVE_PAGES } from '@/features/lab/narrative/pages'
 import { ComponentsPage } from '@/pages/ComponentsPage'
-import { HomePage } from '@/pages/HomePage'
-import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { SettingsPage } from '@/pages/SettingsPage'
-import { StepsPageExample } from '@/pages/StepsPageExample'
-import { TabbedPageExample } from '@/pages/TabbedPageExample'
+import { AlmanacPage } from '@/pages/lab/AlmanacPage'
+import { AskPage } from '@/pages/lab/AskPage'
+import { AtlasPage } from '@/pages/lab/AtlasPage'
+import { AttentionPage } from '@/pages/lab/AttentionPage'
+import { BoxScorePage } from '@/pages/lab/BoxScorePage'
+import { ChartPage } from '@/pages/lab/ChartPage'
+import { DeparturesPage } from '@/pages/lab/DeparturesPage'
+import { DiffPage } from '@/pages/lab/DiffPage'
+import { ForecastPage } from '@/pages/lab/ForecastPage'
+import { GridClockPage } from '@/pages/lab/GridClockPage'
+import { InboxPage } from '@/pages/lab/InboxPage'
+import { LedgerPage } from '@/pages/lab/LedgerPage'
+import { LifelinesPage } from '@/pages/lab/LifelinesPage'
+import { PagesPage } from '@/pages/lab/PagesPage'
+import { SpecimenPage } from '@/pages/lab/SpecimenPage'
+import { TerminalPage } from '@/pages/lab/TerminalPage'
+import { WirePage } from '@/pages/lab/WirePage'
 
 /**
  * Every page in the app, in drawer order. This is the one place to add a
@@ -17,37 +33,43 @@ import { TabbedPageExample } from '@/pages/TabbedPageExample'
  * - `layout: 'full'` drops the page padding and max width (canvases, editors, maps).
  * - `hidden: true` keeps a route out of the drawer (detail pages, wizards).
  * - The `pinned` section sits at the bottom of the drawer (Settings).
- *
- * The Projects group and the Reference section are examples: replace them.
- * Keep TabbedPageExample / StepsPageExample as usage references until the
- * app has its own PageTabs / PageSteps pages.
  */
+
+/** Page component and layout per experiment id (titles, icons and groups live in the catalog). */
+const LAB_PAGES: Record<string, Pick<NavItem, 'page' | 'layout'>> = {
+  forecast: { page: ForecastPage },
+  attention: { page: AttentionPage },
+  terminal: { page: TerminalPage, layout: 'full' },
+  ask: { page: AskPage },
+  specimen: { page: SpecimenPage },
+  wire: { page: WirePage, layout: 'full' },
+  chart: { page: ChartPage },
+  inbox: { page: InboxPage, layout: 'full' },
+  diff: { page: DiffPage },
+  almanac: { page: AlmanacPage },
+  departures: { page: DeparturesPage },
+  pages: { page: PagesPage, layout: 'full' },
+  'box-score': { page: BoxScorePage },
+  ledger: { page: LedgerPage, layout: 'full' },
+  'grid-clock': { page: GridClockPage },
+  lifelines: { page: LifelinesPage },
+  ...NARRATIVE_PAGES,
+  ...ANNOTATED_PAGES,
+}
+
+const GROUPS: ExperimentGroup[] = ['favorite', 'narrative', 'annotated', 'new', 'kept']
+
 export const NAV: NavSection[] = [
   {
-    items: [{ path: '/', label: 'Home', icon: House, page: HomePage }],
+    items: [{ path: '/', label: 'Atlas', icon: MapIcon, page: AtlasPage }],
   },
-  {
-    heading: 'Workspace',
-    items: [
-      {
-        path: '/projects',
-        label: 'Projects',
-        icon: FolderKanban,
-        page: () => <PlaceholderPage title="Projects" />,
-        children: [
-          { path: '/projects/active', label: 'Active', page: () => <PlaceholderPage title="Active projects" /> },
-          { path: '/projects/archived', label: 'Archived', page: () => <PlaceholderPage title="Archived projects" /> },
-        ],
-      },
-    ],
-  },
+  ...GROUPS.map((g) => ({
+    heading: GROUP_LABELS[g],
+    items: EXPERIMENTS.filter((e) => e.group === g).map((e) => ({ path: e.path, label: e.title, icon: e.icon, ...LAB_PAGES[e.id] })),
+  })),
   {
     heading: 'Reference',
-    items: [
-      { path: '/components', label: 'Components', icon: Shapes, page: ComponentsPage },
-      { path: '/examples/tabs', label: 'Page tabs', icon: PanelTop, page: TabbedPageExample },
-      { path: '/examples/steps', label: 'Step flow', icon: ListOrdered, page: StepsPageExample },
-    ],
+    items: [{ path: '/components', label: 'Components', icon: Shapes, page: ComponentsPage }],
   },
   {
     pinned: true,
