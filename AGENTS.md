@@ -10,6 +10,8 @@ npm run dev        # Vite dev server
 npm run typecheck  # tsc --noEmit
 npm run build      # typecheck + production build into dist/
 npm run ui:add -- tabs table   # add shadcn/ui components (see "Components first")
+npm run app        # build, then open as a desktop app (Electron)
+npm run app:dist   # build a Windows installer into release/
 ```
 
 Run `npm run typecheck` and `npm run build` before you call a change done. Code style is in `.prettierrc.json`: single quotes, no semicolons.
@@ -24,6 +26,7 @@ React 19, TypeScript (strict), Vite, Tailwind CSS v4, Radix primitives (`radix-u
 | --- | --- |
 | `src/app/config.ts` | App name, tagline, storage prefix, default theme. Edit first in a new app. |
 | `src/app/routes.tsx` | Every page and the drawer's sections. **The one place to add a page.** |
+| `src/pages/CatalogPage.tsx` | The front page: the catalog, generated from `NAV`. |
 | `src/pages/` | One file per page. |
 | `src/components/layout/` | `AppShell`, `SideNav`, `TopBar`, `TopBarPortal`, `PageHeader` and the other header styles (see "Choosing a page header"), `PageTabs`, `PageSteps`, `BrandMark`, nav types. |
 | `src/components/ui/` | The UI kit (Button, Card, Dialog, `SearchField`, …). |
@@ -34,9 +37,21 @@ React 19, TypeScript (strict), Vite, Tailwind CSS v4, Radix primitives (`radix-u
 | `src/lib/prefs.ts` | `prefs` / `readJson` / `writeJson`: localStorage that survives storage being unavailable. |
 | `src/hooks/usePageTab.ts` | The active tab / step of a page, kept in the URL (`?tab=`). |
 | `src/lib/router.ts` | Hash router: `useRoute`, `navigate`, `href`, `useSearchParams`. |
+| `src/features/lab/` | The dashboards: `catalog.ts` (titles, groups, Atlas coordinates), `feeds.ts` (shared live-data hooks, one cache per feed), `sources.ts` (feed URLs and parsers), `useLiveData.ts`, `LabKit.tsx` (`SourceLine`, `LoadGate`), one folder per dashboard. Pages in `src/pages/lab/`. |
+| `electron/main.cjs` | Desktop shell: loads `dist/` over an `app://` scheme. `npm run app` / `npm run app:dist`. |
 | `src/styles/theme.css` | Token defaults, the Tailwind `@theme` mapping, base styles. |
 
 Feature code that isn't a page goes in `src/features/<feature>/` (components, hooks, API calls for that feature). Shared hooks go in `src/hooks/`.
+
+## The catalog
+
+This repo is a working app and the template at once. The drawer is a catalog with three sections:
+
+- **Building blocks:** Components, Page headers, Page tabs, Step flow.
+- **Page types:** Overview (a conventional home page), Nested pages, Wiki pages.
+- **Dashboards:** the Atlas, then one drawer group per dashboard group. Dashboards are listed in `src/features/lab/catalog.ts` (the narrative and annotated groups in their own `catalog.ts` and `pages.tsx`); `routes.tsx` maps each id to its page.
+
+The Catalog page reads `NAV`, so a new page shows up there by itself. Give it a `description` (one line) so the catalog can say what it's for. Dashboards that read live data use the hooks in `feeds.ts`, show their provenance with `SourceLine`, and gate the first paint with `LoadGate`. Check a page at any size with `bash scripts/shot.sh /route out.png dark 1440 900` while the dev server runs on port 5291 (`npx vite --port 5291`).
 
 ## Adding a page
 
@@ -96,7 +111,7 @@ Full examples: `src/pages/TabbedPageExample.tsx` and `src/pages/StepsPageExample
 
 ### Choosing a page header
 
-Pick the header by the kind of page, not page by page. All of them are in `src/components/layout/`, and each has a live example under Reference > Page headers (`src/pages/headers/`).
+Pick the header by the kind of page, not page by page. All of them are in `src/components/layout/`, and each has a live example under Building blocks > Page headers (`src/pages/headers/`).
 
 | Kind of page | Header | Notes |
 | --- | --- | --- |
@@ -162,7 +177,8 @@ Need a component the kit doesn't have (tabs that switch panels inside a card, ta
 
 ## Starting a new app from this template
 
-1. Set `name`, `tagline` and `storagePrefix` in `src/app/config.ts`, `"name"` in `package.json` (then `npm install` to sync the lockfile), and `<title>` in `index.html`.
-2. Replace the sample content: `HomePage`, and the Projects group and Reference section in `src/app/routes.tsx`. Taking `ComponentsPage` out of the routes is fine. Keep the file as a usage reference until the app no longer needs it, then delete it. Delete `PlaceholderPage` once no route uses it.
-3. Replace `public/favicon.svg` (it shows an "M"). Optionally swap the `BrandTile` initial for a logo.
-4. Rewrite `README.md` for the app.
+1. Set `name`, `tagline` and `storagePrefix` in `src/app/config.ts`, `"name"` (and `build.productName` / `build.appId` if you'll ship the desktop app) in `package.json` (then `npm install` to sync the lockfile), and `<title>` in `index.html`.
+2. Decide which catalog sections the app keeps. Point the first `NAV` item at the app's own home page and delete the sections you don't need from `src/app/routes.tsx`, then delete their files: dashboards are `src/pages/lab/`, `src/features/lab/`, `public/data/` and `scripts/fetch-snapshots.mjs`; wiki pages are `src/pages/wiki/` and `src/features/wiki/`; header examples are `src/pages/headers/` (keep the header components themselves). Keep `ComponentsPage` as a usage reference until the app no longer needs it. Delete `PlaceholderPage` once no route uses it. Run `npm run build` to catch anything still imported.
+3. Replace `public/favicon.svg` and `build/icon.png` (they show an "M"). Optionally swap the `BrandTile` initial for a logo.
+4. No desktop app? Remove `electron/`, `build/`, the `main`, `app` and `app:dist` entries and the `build` block in `package.json`, and the `electron` / `electron-builder` dev dependencies.
+5. Rewrite `README.md` for the app.

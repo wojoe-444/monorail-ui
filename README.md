@@ -1,6 +1,21 @@
-# Dashboard Lab
+# MonoRail UI
 
-Twenty-five dashboards built on the MonoRail UI template. Each takes one idea about dashboard design as far as it will go, runs on live public data, and says what it gives up. The Atlas (`/`) places them on a map: how much is on screen, and whether the data speaks in pictures or in words.
+A working app and the template new apps start from. It opens on a catalog of everything the kit can do: components, page types and 25 dashboards on live public data. New apps keep the sections they want and delete the rest. It comes from [MonoRail](https://github.com/wojoe-444/MonoRail/tree/1821c9ed8239757d0bfcff6741256773c4b7b2a8/apps/command-hub/src) and includes:
+
+- **App layout:** a collapsible side drawer with sections and subpage groups, a top bar with breadcrumbs, and a light/dark toggle.
+- **Theme:** 31 color schemes in light and dark, picked in Settings and remembered, all built on one set of color tokens.
+- **Components:** buttons, cards, form controls, dialogs, menus, tooltips, KPI tiles and sparklines, as editable source in `src/components/`.
+- **Page headers:** nine header styles for different kinds of page (dashboard, list, detail, settings, reading, create flow and more), with live examples under Building blocks > Page headers.
+- **Page types:** an overview home, nested pages, and eight wiki layouts (portal, article, entity profile, dataset, three-pane docs, directory, glossary, timeline).
+- **Dashboards:** 25 experiments in dashboard design on live public data (earthquakes, space weather, the GB grid, weather, Wikipedia, launches, World Bank), with an Atlas that maps them.
+- **Desktop app:** an Electron shell and a Windows installer (`npm run app:dist`).
+- **Agent instructions:** [`AGENTS.md`](./AGENTS.md) (and `CLAUDE.md`) tell coding agents how to add pages and which tokens and components to use.
+
+Stack: React 19, TypeScript, Vite, Tailwind CSS v4, Radix, lucide-react. Components follow shadcn/ui conventions, so `npm run ui:add -- <component>` adds more that match.
+
+## Dashboards
+
+Each dashboard takes one idea about dashboard design as far as it will go, runs on live public data, and says what it gives up. Dashboards > Atlas places them on a map: how much is on screen, and whether the data speaks in pictures or in words.
 
 | Group | Experiment | Idea | Data |
 | --- | --- | --- | --- |
@@ -30,28 +45,7 @@ Twenty-five dashboards built on the MonoRail UI template. Each takes one idea ab
 | Kept | Grid Clock | Lead with the decision | NESO GB carbon intensity |
 | Kept | Lifelines | Small multiples on one scale | World Bank (snapshot) |
 
-```sh
-npm install
-npm run dev                          # then open the printed localhost URL
-node scripts/fetch-snapshots.mjs     # refresh the World Bank snapshots (World Bank blocks browser fetches)
-bash scripts/shot.sh /lab/wire out.png dark 1440 900     # headless screenshot, any viewport
-```
-
-The browser fetches every other feed directly; they all allow cross-origin requests. Feed URLs and parsers are in `src/features/lab/sources.ts`, shared feed hooks (one cache per feed) in `src/features/lab/feeds.ts`, the fetch-and-cache hook in `src/features/lab/useLiveData.ts`, and each experiment is a page in `src/pages/lab/` with its components in `src/features/lab/<name>/`.
-
----
-
-# MonoRail UI template
-
-A ready-made React app frame for starting new apps without redoing the design each time. It comes from [MonoRail](https://github.com/wojoe-444/MonoRail/tree/1821c9ed8239757d0bfcff6741256773c4b7b2a8/apps/command-hub/src) and includes:
-
-- **App layout:** a collapsible side drawer with sections and subpage groups, a top bar with breadcrumbs, and a light/dark toggle.
-- **Theme:** 31 color schemes in light and dark, picked in Settings and remembered, all built on one set of color tokens.
-- **Components:** buttons, cards, form controls, dialogs, menus, tooltips, KPI tiles and sparklines, as editable source in `src/components/`.
-- **Page headers:** nine header styles for different kinds of page (dashboard, list, detail, settings, reading, create flow and more), with live examples under Reference > Page headers.
-- **Agent instructions:** [`AGENTS.md`](./AGENTS.md) (and `CLAUDE.md`) tell coding agents how to add pages and which tokens and components to use.
-
-Stack: React 19, TypeScript, Vite, Tailwind CSS v4, Radix, lucide-react. Components follow shadcn/ui conventions, so `npm run ui:add -- <component>` adds more that match.
+The browser fetches the feeds directly; they all allow cross-origin requests except World Bank, which is a snapshot in `public/data` (refresh with `node scripts/fetch-snapshots.mjs`). Feed URLs and parsers are in `src/features/lab/sources.ts`, shared feed hooks (one cache per feed) in `src/features/lab/feeds.ts`, the fetch-and-cache hook in `src/features/lab/useLiveData.ts`. Each dashboard is a page in `src/pages/lab/` with its components in `src/features/lab/<name>/`.
 
 ## Start a new app
 
