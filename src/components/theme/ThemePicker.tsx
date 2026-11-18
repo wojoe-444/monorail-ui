@@ -11,7 +11,7 @@ export function Swatches({ p, dark, className }: { p: Palette; dark: boolean; cl
   const t = tokens(p, dark)
   if (p.backdrop) {
     // Picture themes: the picture itself, with the primary, highlight and success chips on the right.
-    const src = dark && p.backdrop.dark ? p.backdrop.dark : p.backdrop.src
+    const src = (dark && p.backdrop.dark ? p.backdrop.dark : p.backdrop).thumb
     return (
       <span
         className={cn(
