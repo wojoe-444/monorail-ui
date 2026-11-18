@@ -1,10 +1,12 @@
-import { FolderKanban, House, Settings, Shapes } from 'lucide-react'
+import { FolderKanban, House, ListOrdered, PanelTop, Settings, Shapes } from 'lucide-react'
 
 import type { NavSection } from '@/components/layout/nav'
 import { ComponentsPage } from '@/pages/ComponentsPage'
 import { HomePage } from '@/pages/HomePage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { SettingsPage } from '@/pages/SettingsPage'
+import { StepsPageExample } from '@/pages/StepsPageExample'
+import { TabbedPageExample } from '@/pages/TabbedPageExample'
 
 /**
  * Every page in the app, in drawer order. This is the one place to add a
@@ -17,6 +19,8 @@ import { SettingsPage } from '@/pages/SettingsPage'
  * - The `pinned` section sits at the bottom of the drawer (Settings).
  *
  * The Projects group and the Reference section are examples: replace them.
+ * Keep TabbedPageExample / StepsPageExample as usage references until the
+ * app has its own PageTabs / PageSteps pages.
  */
 export const NAV: NavSection[] = [
   {
@@ -39,7 +43,11 @@ export const NAV: NavSection[] = [
   },
   {
     heading: 'Reference',
-    items: [{ path: '/components', label: 'Components', icon: Shapes, page: ComponentsPage }],
+    items: [
+      { path: '/components', label: 'Components', icon: Shapes, page: ComponentsPage },
+      { path: '/examples/tabs', label: 'Page tabs', icon: PanelTop, page: TabbedPageExample },
+      { path: '/examples/steps', label: 'Step flow', icon: ListOrdered, page: StepsPageExample },
+    ],
   },
   {
     pinned: true,
