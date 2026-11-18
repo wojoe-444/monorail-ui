@@ -28,6 +28,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { FileTree, type FileTreeNode } from '@/components/ui/file-tree'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -48,6 +49,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 export function ComponentsPage() {
   const [view, setView] = useState<'list' | 'board'>('list')
   const [level, setLevel] = useState(64)
+  const [treeFilter, setTreeFilter] = useState('')
+  const [treeSelected, setTreeSelected] = useState('style')
 
   return (
     <div className="flex flex-col gap-8">
@@ -229,7 +232,13 @@ export function ComponentsPage() {
             <CardDescription>KPI tiles, sparklines and the fixed chart series colors.</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-            <StatTile label="Completed runs" value="128" delta={0.12} deltaLabel="vs last week" trend={<Sparkline data={[2, 4, 3, 7, 6, 9]} />} />
+            <StatTile
+              label="Completed runs"
+              value="128"
+              delta={0.12}
+              deltaLabel="vs last week"
+              trend={<Sparkline data={[2, 4, 3, 7, 6, 9]} />}
+            />
             <Separator />
             <Legend items={SERIES_COLORS.map((color, i) => ({ key: `s${i + 1}`, label: `Series ${i + 1}`, color }))} />
             <div className="flex items-center gap-3">
@@ -241,7 +250,49 @@ export function ComponentsPage() {
             </div>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>File tree</CardTitle>
+            <CardDescription>Folders and pages for a docs sidebar or file browser. Type to filter.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="tree-filter">Filter</Label>
+              <Input id="tree-filter" value={treeFilter} onChange={(e) => setTreeFilter(e.target.value)} placeholder="e.g. guide" />
+            </div>
+            <FileTree
+              nodes={TREE_SAMPLE}
+              selected={treeSelected}
+              onSelect={(n) => setTreeSelected(n.id)}
+              filter={treeFilter}
+              aria-label="Sample file tree"
+            />
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
 }
+
+const TREE_SAMPLE: FileTreeNode[] = [
+  {
+    id: 'docs',
+    label: 'Docs',
+    badge: '4',
+    children: [
+      { id: 'intro', label: 'Introduction' },
+      {
+        id: 'guides',
+        label: 'Guides',
+        children: [
+          { id: 'setup', label: 'Setup guide' },
+          { id: 'style', label: 'Style guide' },
+        ],
+      },
+      { id: 'faq', label: 'FAQ' },
+    ],
+  },
+  { id: 'notes', label: 'Meeting notes', children: [{ id: 'nov', label: 'November planning' }] },
+  { id: 'readme', label: 'README' },
+]

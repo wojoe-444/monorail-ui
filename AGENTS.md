@@ -27,6 +27,7 @@ React 19, TypeScript (strict), Vite, Tailwind CSS v4, Radix primitives (`radix-u
 | `src/pages/` | One file per page. |
 | `src/components/layout/` | `AppShell`, `SideNav`, `TopBar`, `PageHeader`, `PageTabs`, `PageSteps`, `BrandMark`, nav types. |
 | `src/components/ui/` | The UI kit (Button, Card, Dialog, …). |
+| `src/features/wiki/`, `src/pages/wiki/` | Wiki layout drafts (sample Chicago 'L' content): portal, article, entity profile, dataset, three-pane docs, directory, glossary, timeline. Copy a layout from here when building a content page. |
 | `src/components/charts/` | `StatTile`, `Sparkline`, `Legend`, `ChartTooltipContent`, series colors. |
 | `src/components/theme/ThemePicker.tsx` | Appearance card used on the Settings page. |
 | `src/lib/theme.ts` | Mode + palette store: `useThemeMode`, `usePalette`, `setThemeMode`, `setPalette`. |
@@ -110,7 +111,7 @@ Full examples: `src/pages/TabbedPageExample.tsx` and `src/pages/StepsPageExample
 
 Opacity modifiers are fine (`bg-primary/10`). Status hues mean the same thing in every palette: green = good, amber = needs attention, red = error or destructive, blue = information. Don't use them for decoration.
 
-**Components first.** Use the kit before writing markup: `Button` (variants `default`, `soft`, `outline`, `secondary`, `ghost`, `link`, `destructive`; sizes `sm`, `default`, `lg`, `icon`), `Card` + `CardHeader`/`CardTitle`/`CardDescription`/`CardAction`/`CardContent`/`CardFooter`, `Badge` for status, `Dialog` for modal tasks, `DropdownMenu` for row actions, `Tooltip` for icon-only buttons, `Segmented` for a compact 2–4 option toggle (view mode, filter, time range), `NativeSelect` for picking from a list, `Switch` for on/off settings, `StatTile` for KPIs.
+**Components first.** Use the kit before writing markup: `Button` (variants `default`, `soft`, `outline`, `secondary`, `ghost`, `link`, `destructive`; sizes `sm`, `default`, `lg`, `icon`), `Card` + `CardHeader`/`CardTitle`/`CardDescription`/`CardAction`/`CardContent`/`CardFooter`, `Badge` for status, `Dialog` for modal tasks, `DropdownMenu` for row actions, `Tooltip` for icon-only buttons, `Segmented` for a compact 2–4 option toggle (view mode, filter, time range), `NativeSelect` for picking from a list, `Switch` for on/off settings, `StatTile` for KPIs, `FileTree` for a collapsible tree of folders and pages (docs sidebars, file browsers; pass a filter `Input`'s value as `filter`).
 
 Need a component the kit doesn't have (tabs that switch panels inside a card, table, popover, sheet, command, calendar)? Add it with **`npm run ui:add -- <name>`**, not `npx shadcn add` directly. The wrapper runs the shadcn CLI, so the file lands in `src/components/ui/` styled with the theme tokens. Then it points the new file's `cn` import at `@/lib/utils`, because shadcn 4 otherwise adds a separate `cn` npm package. Afterwards, check the new component's colors are token classes. Restyle surfaces to match the kit if needed (e.g. active states use `bg-card shadow-elevation-1` like `Segmented`).
 
