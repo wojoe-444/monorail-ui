@@ -229,7 +229,11 @@ export function WikiLayoutsPage() {
         {DRAFTS.map((d) => (
           <Card key={d.letter} className="gap-4 pt-4">
             <CardContent className="px-4">
-              <a href={href(d.path)} aria-label={`Open ${d.title}`} className="block h-28 rounded-lg border bg-background p-3 transition-shadow hover:shadow-elevation-2">
+              <a
+                href={href(d.path)}
+                aria-label={`Open ${d.title}`}
+                className="block h-28 rounded-lg border bg-background p-3 transition-shadow hover:shadow-elevation-2"
+              >
                 {d.sketch}
               </a>
             </CardContent>

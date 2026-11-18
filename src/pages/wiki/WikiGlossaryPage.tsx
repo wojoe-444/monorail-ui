@@ -55,7 +55,13 @@ export function WikiGlossaryPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative sm:w-80">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input aria-label="Search terms" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search terms and definitions" className="pl-9" />
+          <Input
+            aria-label="Search terms"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search terms and definitions"
+            className="pl-9"
+          />
         </div>
         <div className="flex flex-wrap gap-1" role="group" aria-label="Filter by topic">
           {TAGS.map((t) => (
@@ -66,7 +72,9 @@ export function WikiGlossaryPage() {
               onClick={() => setTag(t)}
               className={cn(
                 'h-8 rounded-md px-3 text-sm font-medium transition-colors',
-                tag === t ? 'bg-primary-soft text-primary-soft-foreground' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+                tag === t
+                  ? 'bg-primary-soft text-primary-soft-foreground'
+                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
               )}
             >
               {t}

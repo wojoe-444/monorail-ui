@@ -115,13 +115,7 @@ export function Callout({ tone = 'info', title, children }: { tone?: keyof typeo
 export function ProseHeading({ id, children, level = 2 }: { id: string; children: ReactNode; level?: 2 | 3 }) {
   const Tag = level === 2 ? 'h2' : 'h3'
   return (
-    <Tag
-      id={id}
-      className={cn(
-        'scroll-mt-24 font-semibold tracking-tight',
-        level === 2 ? 'mt-2 border-b pb-2 text-lg' : 'text-base',
-      )}
-    >
+    <Tag id={id} className={cn('scroll-mt-24 font-semibold tracking-tight', level === 2 ? 'mt-2 border-b pb-2 text-lg' : 'text-base')}>
       {children}
     </Tag>
   )

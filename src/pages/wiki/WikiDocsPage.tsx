@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { ChevronRight, FileText, Folder, FolderOpen, Pencil, Search } from 'lucide-react'
+import { ChevronRight, Pencil, Search } from 'lucide-react'
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { FileTree, type FileTreeNode } from '@/components/ui/file-tree'
 import { Input } from '@/components/ui/input'
 import { Callout, FactList, ProseHeading, TableOfContents, type TocItem } from '@/features/wiki/components'
-import { cn } from '@/lib/utils'
 
 /*
  * Layout E · Three-pane docs (layout: 'full'). A page tree on the left, the
@@ -15,17 +15,18 @@ import { cn } from '@/lib/utils'
  * hierarchy, where knowing "where am I" matters.
  */
 
-interface TreeFolder {
-  name: string
-  pages: string[]
-}
+const folder = (label: string, pages: string[]): FileTreeNode => ({
+  id: label,
+  label,
+  children: pages.map((p) => ({ id: p, label: p })),
+})
 
-const TREE: TreeFolder[] = [
-  { name: 'Getting started', pages: ['How this wiki works', 'Style guide', 'Who owns what'] },
-  { name: 'Service changes', pages: ['Planned reroutes', 'Holiday schedules', 'Bus shuttles'] },
-  { name: 'Incidents', pages: ['Slow zone reporting', 'Power outages', 'Station evacuations', 'Weather plans'] },
-  { name: 'Data', pages: ['Ridership datasets', 'GTFS publishing', 'Train tracker feed'] },
-  { name: 'Fleet & yards', pages: ['Car series', 'Yard assignments'] },
+const TREE: FileTreeNode[] = [
+  folder('Getting started', ['How this wiki works', 'Style guide', 'Who owns what']),
+  folder('Service changes', ['Planned reroutes', 'Holiday schedules', 'Bus shuttles']),
+  folder('Incidents', ['Slow zone reporting', 'Power outages', 'Station evacuations', 'Weather plans']),
+  folder('Data', ['Ridership datasets', 'GTFS publishing', 'Train tracker feed']),
+  folder('Fleet & yards', ['Car series', 'Yard assignments']),
 ]
 
 const CURRENT = 'Slow zone reporting'
@@ -47,8 +48,7 @@ const STEPS = [
 ]
 
 export function WikiDocsPage() {
-  const [open, setOpen] = useState<string[]>(['Incidents'])
-  const toggle = (name: string) => setOpen((o) => (o.includes(name) ? o.filter((n) => n !== name) : [...o, name]))
+  const [filter, setFilter] = useState('')
 
   return (
     <div className="flex h-full">
@@ -56,49 +56,16 @@ export function WikiDocsPage() {
         <div className="border-b p-3">
           <div className="relative">
             <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input aria-label="Filter pages" placeholder="Filter pages" className="h-8 pl-8" />
+            <Input
+              aria-label="Filter pages"
+              placeholder="Filter pages"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="h-8 pl-8"
+            />
           </div>
         </div>
-        <nav aria-label="Page tree" className="flex-1 overflow-y-auto p-2 text-sm">
-          {TREE.map((f) => {
-            const expanded = open.includes(f.name)
-            return (
-              <div key={f.name}>
-                <button
-                  type="button"
-                  onClick={() => toggle(f.name)}
-                  aria-expanded={expanded}
-                  className="flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-left font-medium hover:bg-accent hover:text-accent-foreground"
-                >
-                  <ChevronRight className={cn('size-3.5 text-muted-foreground transition-transform', expanded && 'rotate-90')} />
-                  {expanded ? <FolderOpen className="size-4 text-muted-foreground" /> : <Folder className="size-4 text-muted-foreground" />}
-                  <span className="truncate">{f.name}</span>
-                </button>
-                {expanded && (
-                  <ul className="mb-1 ml-5 border-l pl-2">
-                    {f.pages.map((p) => (
-                      <li key={p}>
-                        <button
-                          type="button"
-                          aria-current={p === CURRENT ? 'page' : undefined}
-                          className={cn(
-                            'flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left',
-                            p === CURRENT
-                              ? 'bg-primary-soft font-medium text-primary-soft-foreground'
-                              : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
-                          )}
-                        >
-                          <FileText className="size-3.5 shrink-0" />
-                          <span className="truncate">{p}</span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            )
-          })}
-        </nav>
+        <FileTree nodes={TREE} selected={CURRENT} filter={filter} aria-label="Page tree" className="flex-1 overflow-y-auto p-2" />
       </aside>
 
       <div className="min-w-0 flex-1 overflow-y-auto">
@@ -129,9 +96,8 @@ export function WikiDocsPage() {
 
           <ProseHeading id="purpose">Purpose</ProseHeading>
           <p>
-            A slow zone is a stretch of track where trains must run below the normal speed limit, usually because of track
-            condition or work in progress. Every slow zone must be logged so crews, dispatchers and riders see the same
-            information.
+            A slow zone is a stretch of track where trains must run below the normal speed limit, usually because of track condition or work
+            in progress. Every slow zone must be logged so crews, dispatchers and riders see the same information.
           </p>
 
           <ProseHeading id="when">When to report</ProseHeading>
@@ -160,18 +126,15 @@ export function WikiDocsPage() {
           </ol>
 
           <ProseHeading id="publish">Publishing the map</ProseHeading>
-          <p>
-            The public slow zone map refreshes from the log every hour. To force a refresh after a large change, run the
-            publish job:
-          </p>
+          <p>The public slow zone map refreshes from the log every hour. To force a refresh after a large change, run the publish job:</p>
           <pre className="overflow-x-auto rounded-lg bg-muted p-4 font-mono text-xs">
             <code>{'make publish-slow-zones ENV=prod\n# expect: "published 14 zones (3 changed)"'}</code>
           </pre>
 
           <ProseHeading id="clear">Clearing a zone</ProseHeading>
           <p>
-            After the repair, the track inspector confirms the zone in the field. Close it in the log with the inspection
-            reference; it drops off the map at the next refresh.
+            After the repair, the track inspector confirms the zone in the field. Close it in the log with the inspection reference; it
+            drops off the map at the next refresh.
           </p>
           <Callout tone="tip" title="Tip">
             Close zones before the Monday review so the weekly report reflects the real count.

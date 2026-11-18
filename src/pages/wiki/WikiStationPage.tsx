@@ -199,7 +199,11 @@ export function WikiStationPage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             {["Daily 'L' station entries", 'Elevator status feed', 'GTFS stops'].map((d) => (
-              <a key={d} href={href('/wiki/dataset')} className="flex items-center justify-between gap-2 text-sm font-medium hover:underline">
+              <a
+                key={d}
+                href={href('/wiki/dataset')}
+                className="flex items-center justify-between gap-2 text-sm font-medium hover:underline"
+              >
                 <span className="truncate">{d}</span>
                 <ArrowUpRight className="size-4 shrink-0 text-muted-foreground" />
               </a>

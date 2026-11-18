@@ -13,6 +13,7 @@ import {
   Map as MapIcon,
   PanelTop,
   PanelsTopLeft,
+  Rows3,
   Settings,
   Shapes,
   Sparkles,
@@ -29,6 +30,7 @@ import { ComponentsPage } from '@/pages/ComponentsPage'
 import { BannerExample } from '@/pages/headers/BannerExample'
 import { CollapsingExample } from '@/pages/headers/CollapsingExample'
 import { CommandBarExample } from '@/pages/headers/CommandBarExample'
+import { DenseOverviewExample } from '@/pages/DenseOverviewExample'
 import { EntityExample } from '@/pages/headers/EntityExample'
 import { ListHeaderExample } from '@/pages/headers/ListHeaderExample'
 import { PageHeadersPage } from '@/pages/headers/PageHeadersPage'
@@ -180,6 +182,13 @@ export const NAV: NavSection[] = [
         icon: LayoutGrid,
         page: HomePage,
         description: 'A conventional home page: KPI tiles, recent activity, progress.',
+      },
+      {
+        path: '/examples/dense',
+        label: 'Dense overview',
+        icon: Rows3,
+        page: DenseOverviewExample,
+        description: 'A data-heavy overview: status strip, table cards, divergence bars.',
       },
       {
         path: '/projects',

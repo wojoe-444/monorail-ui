@@ -79,13 +79,13 @@ export function WikiArticlePage() {
         <article className="flex max-w-3xl min-w-0 flex-col gap-4 text-sm leading-relaxed">
           <ProseHeading id="overview">Overview</ProseHeading>
           <p>
-            The <strong>Red Line</strong> is the busiest route on the 'L', averaging about {fmt(line.weekdayK * 1000)} station
-            entries each weekday. It runs {line.lengthMi} miles between{' '}
+            The <strong>Red Line</strong> is the busiest route on the 'L', averaging about {fmt(line.weekdayK * 1000)} station entries each
+            weekday. It runs {line.lengthMi} miles between{' '}
             <WikiLink to="/wiki/station" title="Howard" summary="Northern terminal; transfers to the Purple and Yellow lines.">
               Howard
             </WikiLink>{' '}
-            in Rogers Park and 95th/Dan Ryan on the far South Side, with {line.stations} stations. It is one of two lines,
-            with the Blue Line, that run 24 hours a day.
+            in Rogers Park and 95th/Dan Ryan on the far South Side, with {line.stations} stations. It is one of two lines, with the Blue
+            Line, that run 24 hours a day.
           </p>
           <Callout tone="info" title="Sample content">
             This page is a layout draft. Figures are rounded or illustrative; check the source dataset before quoting them.
@@ -93,15 +93,15 @@ export function WikiArticlePage() {
 
           <ProseHeading id="route">Route</ProseHeading>
           <p>
-            The route has three distinct sections, each built in a different era and with a different structure. Trains run
-            through all three without a change of crew.
+            The route has three distinct sections, each built in a different era and with a different structure. Trains run through all
+            three without a change of crew.
           </p>
           <ProseHeading id="route-north" level={3}>
             North Side Main Line
           </ProseHeading>
           <p>
-            North of Fullerton, trains run on a four-track embankment and elevated structure shared with the Purple Line
-            Express in rush hours and the{' '}
+            North of Fullerton, trains run on a four-track embankment and elevated structure shared with the Purple Line Express in rush
+            hours and the{' '}
             <WikiLink to="/wiki/article" title="Brown Line" summary="Kimball to the Loop via Ravenswood.">
               Brown Line
             </WikiLink>{' '}
@@ -111,21 +111,21 @@ export function WikiArticlePage() {
             State Street subway
           </ProseHeading>
           <p>
-            Between North/Clybourn and Roosevelt the line runs in the State Street subway, opened in 1943. The downtown
-            platforms at Lake, Monroe and Jackson are connected by a continuous mezzanine-level platform.
+            Between North/Clybourn and Roosevelt the line runs in the State Street subway, opened in 1943. The downtown platforms at Lake,
+            Monroe and Jackson are connected by a continuous mezzanine-level platform.
           </p>
           <ProseHeading id="route-south" level={3}>
             Dan Ryan branch
           </ProseHeading>
           <p>
-            South of Roosevelt the line climbs to the surface and runs in the median of the Dan Ryan Expressway to 95th
-            Street. The branch opened in 1969 and was fully rebuilt in 2013.
+            South of Roosevelt the line climbs to the surface and runs in the median of the Dan Ryan Expressway to 95th Street. The branch
+            opened in 1969 and was fully rebuilt in 2013.
           </p>
 
           <ProseHeading id="history">History</ProseHeading>
           <p>
-            The northern section began as the Northwestern Elevated in 1900. The routes were combined and renamed under the
-            color scheme in 1993; before that, the same trains were known as the Howard–Dan Ryan route. See{' '}
+            The northern section began as the Northwestern Elevated in 1900. The routes were combined and renamed under the color scheme in
+            1993; before that, the same trains were known as the Howard–Dan Ryan route. See{' '}
             <WikiLink to="/wiki/timeline" title="History of the 'L'" summary="From the 1892 South Side elevated to today.">
               History of the 'L'
             </WikiLink>{' '}
@@ -134,8 +134,7 @@ export function WikiArticlePage() {
 
           <ProseHeading id="service">Service</ProseHeading>
           <p>
-            Trains run every 3 to 6 minutes in rush hours, 6 to 10 minutes midday and evenings, and about every 15 minutes
-            overnight. See{' '}
+            Trains run every 3 to 6 minutes in rush hours, 6 to 10 minutes midday and evenings, and about every 15 minutes overnight. See{' '}
             <WikiLink to="/wiki/glossary" title="Headway" summary="Time between consecutive trains at the same point.">
               headway
             </WikiLink>{' '}
@@ -170,8 +169,8 @@ export function WikiArticlePage() {
 
           <ProseHeading id="future">Future plans</ProseHeading>
           <p>
-            The Red Line Extension would carry the line 5.6 miles south from 95th Street to 130th Street, with four new
-            stations. Design work is under way.
+            The Red Line Extension would carry the line 5.6 miles south from 95th Street to 130th Street, with four new stations. Design
+            work is under way.
           </p>
           <Callout tone="warning" title="Open question">
             Opening year is not yet confirmed. Planning to confirm before the next review.
@@ -198,9 +197,7 @@ function Infobox() {
         <CardTitle>Red Line</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <div className="flex h-28 items-center justify-center rounded-lg bg-muted text-xs text-muted-foreground">
-          Route map
-        </div>
+        <div className="flex h-28 items-center justify-center rounded-lg bg-muted text-xs text-muted-foreground">Route map</div>
         <FactList
           rows={[
             ['Termini', `${line.terminals[0]} · ${line.terminals[1]}`],

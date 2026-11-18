@@ -18,11 +18,35 @@ import { usePageTab, type PageTab } from '@/hooks/usePageTab'
  */
 
 const COLUMNS = [
-  { name: 'station_id', type: 'integer', nullable: false, desc: "Parent station id. Stable across renames; joins to GTFS stops' parent_station.", example: '40380' },
-  { name: 'stationname', type: 'text', nullable: false, desc: 'Station name as shown on signage at the time of the record.', example: 'Clark/Lake' },
-  { name: 'date', type: 'date', nullable: false, desc: 'Service date. Trips after midnight count toward the previous day.', example: '2026-11-13' },
+  {
+    name: 'station_id',
+    type: 'integer',
+    nullable: false,
+    desc: "Parent station id. Stable across renames; joins to GTFS stops' parent_station.",
+    example: '40380',
+  },
+  {
+    name: 'stationname',
+    type: 'text',
+    nullable: false,
+    desc: 'Station name as shown on signage at the time of the record.',
+    example: 'Clark/Lake',
+  },
+  {
+    name: 'date',
+    type: 'date',
+    nullable: false,
+    desc: 'Service date. Trips after midnight count toward the previous day.',
+    example: '2026-11-13',
+  },
   { name: 'daytype', type: 'text', nullable: false, desc: 'W weekday, A Saturday, U Sunday or holiday.', example: 'W' },
-  { name: 'rides', type: 'integer', nullable: false, desc: 'Entries through fare control. Transfers inside the paid area are not counted.', example: '15402' },
+  {
+    name: 'rides',
+    type: 'integer',
+    nullable: false,
+    desc: 'Entries through fare control. Transfers inside the paid area are not counted.',
+    example: '15402',
+  },
 ]
 
 const SAMPLE = [
@@ -114,8 +138,8 @@ function Overview() {
           </CardHeader>
           <CardContent className="flex flex-col gap-4 text-sm leading-relaxed">
             <p>
-              Entries are counted at fare control by the fare system and summed per station per service day. A rider who
-              transfers between lines without leaving the paid area is counted once, at the station they entered.
+              Entries are counted at fare control by the fare system and summed per station per service day. A rider who transfers between
+              lines without leaving the paid area is counted once, at the station they entered.
             </p>
             <Callout tone="tip" title="Use for">
               Station comparisons and trends over time. For trips by origin and destination, use the fare tap dataset.
@@ -154,7 +178,13 @@ function Overview() {
             {['Fare gates', 'fare.tap_events', 'ridership.rail_station_daily', 'Ridership dashboard · Open data portal'].map(
               (step, i, all) => (
                 <li key={step} className="flex items-center gap-2 md:contents">
-                  <div className={i === 2 ? 'rounded-lg bg-primary-soft px-3 py-2 font-mono text-xs text-primary-soft-foreground' : 'rounded-lg border px-3 py-2 font-mono text-xs'}>
+                  <div
+                    className={
+                      i === 2
+                        ? 'rounded-lg bg-primary-soft px-3 py-2 font-mono text-xs text-primary-soft-foreground'
+                        : 'rounded-lg border px-3 py-2 font-mono text-xs'
+                    }
+                  >
                     {step}
                   </div>
                   {i < all.length - 1 && <ArrowRight className="size-4 shrink-0 rotate-90 text-muted-foreground md:rotate-0" />}

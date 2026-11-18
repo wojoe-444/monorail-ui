@@ -28,9 +28,10 @@ React 19, TypeScript (strict), Vite, Tailwind CSS v4, Radix primitives (`radix-u
 | `src/app/routes.tsx` | Every page and the drawer's sections. **The one place to add a page.** |
 | `src/pages/CatalogPage.tsx` | The front page: the catalog, generated from `NAV`. |
 | `src/pages/` | One file per page. |
-| `src/components/layout/` | `AppShell`, `SideNav`, `TopBar`, `TopBarPortal`, `PageHeader` and the other header styles (see "Choosing a page header"), `PageTabs`, `PageSteps`, `BrandMark`, nav types. |
-| `src/components/ui/` | The UI kit (Button, Card, Dialog, `SearchField`, …). |
-| `src/components/charts/` | `StatTile`, `Sparkline`, `Legend`, `ChartTooltipContent`, series colors. |
+| `src/components/layout/` | `AppShell`, `SideNav`, `TopBar`, `TopBarPortal`, `PageHeader` and the other header styles (see "Choosing a page header"), `PageTabs`, `PageSteps`, `StatusStrip`, `BrandMark`, nav types. |
+| `src/components/ui/` | The UI kit (Button, Card, Dialog, `SearchField`, `Table`, `TableCard`, `FileTree`, …). |
+| `src/features/wiki/`, `src/pages/wiki/` | Wiki layouts (sample Chicago 'L' content): portal, article, entity profile, dataset, three-pane docs, directory, glossary, timeline. Copy a layout from here when building a content page. |
+| `src/components/charts/` | `StatTile`, `Sparkline`, `DivergenceBar`, `Legend`, `ChartTooltipContent`, series colors. |
 | `src/components/theme/ThemePicker.tsx` | Appearance card used on the Settings page. |
 | `src/lib/theme.ts` | Mode + palette store: `useThemeMode`, `usePalette`, `setThemeMode`, `setPalette`. |
 | `src/lib/palettes.ts` | The color schemes. Each expands into every color token. |
@@ -48,7 +49,7 @@ Feature code that isn't a page goes in `src/features/<feature>/` (components, ho
 This repo is a working app and the template at once. The drawer is a catalog with three sections:
 
 - **Building blocks:** Components, Page headers, Page tabs, Step flow.
-- **Page types:** Overview (a conventional home page), Nested pages, Wiki pages.
+- **Page types:** Overview (a conventional home page), Dense overview, Nested pages, Wiki pages.
 - **Dashboards:** the Atlas, then one drawer group per dashboard group. Dashboards are listed in `src/features/lab/catalog.ts` (the narrative and annotated groups in their own `catalog.ts` and `pages.tsx`); `routes.tsx` maps each id to its page.
 
 The Catalog page reads `NAV`, so a new page shows up there by itself. Give it a `description` (one line) so the catalog can say what it's for. Dashboards that read live data use the hooks in `feeds.ts`, show their provenance with `SourceLine`, and gate the first paint with `LoadGate`. Check a page at any size with `bash scripts/shot.sh /route out.png dark 1440 900` while the dev server runs on port 5291 (`npx vite --port 5291`).
@@ -127,6 +128,19 @@ Pick the header by the kind of page, not page by page. All of them are in `src/c
 
 Every header renders the page's one `h1`. `PageCommandBar`, `CollapsingHeader` and `TaskBar` put content in the top bar through `TopBarPortal` (`src/components/layout/TopBarSlot.tsx`); use it directly if a page needs something else up there. It replaces the breadcrumb while mounted (pass `replaceBreadcrumb={false}` to sit beside it).
 
+### Dense data pages
+
+When a page is mostly lists of things (repositories, branches, runs, files, issues), make it dense instead of a grid of roomy cards. Big-number tiles and two-line list rows waste the screen there. The layout, as in MonoRail's GitHub+ home (`src/pages/DenseOverviewExample.tsx`):
+
+1. `PageHeader`, then `PageTabs sticky={false}` for the views with one filter `Input` on the right that filters every table on the page.
+2. **`StatusStrip`** instead of a row of `StatTile`s: `StatusItem value={9} label="repositories"` cells in one thin row, `StatusSpacer`, then anything that needs the person as `tone="warning"` / `"destructive"` with a fix-it `action` ("Retry", "Show"). Only count what you know exactly; leave out figures you would have to estimate.
+3. **`TableCard`** around each list: a 44px header with `title`, `count`, a one-line `description` (what the numbers mean) and an `action`, then flush content. Pass `collapsible="some.key"` to let the person fold a card away; the choice is remembered with `prefs`.
+4. **`Table`** inside it: single-line 36px rows. Give one cell per row `fill` (the message, title or path, wrapped in a span so it truncates) and `numeric` to counts and times. Ids, hashes and branch names go in `font-mono text-xs`. Use `TableEmpty` for "Loading…" and "No … match". A row that opens something gets `cursor-pointer` and an `onClick`; row actions are small `outline` or `ghost` icon buttons in the last cell.
+5. **`DivergenceBar`** for a pair of opposing counts in a cell (behind | ahead, lost | gained): red grows left of the line, green right.
+6. Grids: `grid grid-cols-1 items-start gap-4 xl:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]` for a wide table beside a narrow one; full-width cards below.
+
+Small states in cells use the status hues as text, not chips: `text-success` (good, e.g. ↑ commits to push), `text-destructive` (↓ to pull, failed), `text-warning-soft-foreground` (● uncommitted), `text-muted-foreground` for neutral words like "clean" or "—". A status dot is `size-2 rounded-full bg-success` (or `bg-destructive`).
+
 ## Design rules
 
 **Colors: tokens only.** Every color comes from the theme tokens through Tailwind classes. Never use hex, `rgb()`, or Tailwind's own palette (`bg-blue-500`, `text-gray-600`). Those don't follow the palette or dark mode.
@@ -145,7 +159,7 @@ Every header renders the page's one `h1`. `PageCommandBar`, `CollapsingHeader` a
 
 Opacity modifiers are fine (`bg-primary/10`). Status hues mean the same thing in every palette: green = good, amber = needs attention, red = error or destructive, blue = information. Don't use them for decoration.
 
-**Components first.** Use the kit before writing markup: `Button` (variants `default`, `soft`, `outline`, `secondary`, `ghost`, `link`, `destructive`; sizes `sm`, `default`, `lg`, `icon`), `Card` + `CardHeader`/`CardTitle`/`CardDescription`/`CardAction`/`CardContent`/`CardFooter`, `Badge` for status, `Dialog` for modal tasks, `DropdownMenu` for row actions, `Tooltip` for icon-only buttons, `Segmented` for a compact 2–4 option toggle (view mode, filter, time range), `NativeSelect` for picking from a list, `Switch` for on/off settings, `StatTile` for KPIs.
+**Components first.** Use the kit before writing markup: `Button` (variants `default`, `soft`, `outline`, `secondary`, `ghost`, `link`, `destructive`; sizes `sm`, `default`, `lg`, `icon`), `Card` + `CardHeader`/`CardTitle`/`CardDescription`/`CardAction`/`CardContent`/`CardFooter`, `Badge` for status, `Dialog` for modal tasks, `DropdownMenu` for row actions, `Tooltip` for icon-only buttons, `Segmented` for a compact 2–4 option toggle (view mode, filter, time range), `NativeSelect` for picking from a list, `Switch` for on/off settings, `StatTile` for KPIs, `FileTree` for a collapsible tree of folders and pages (docs sidebars, file browsers; pass a filter `Input`'s value as `filter`), and for pages full of lists `TableCard` + `Table`, `StatusStrip` and `DivergenceBar` (see "Dense data pages").
 
 Need a component the kit doesn't have (tabs that switch panels inside a card, table, popover, sheet, command, calendar)? Add it with **`npm run ui:add -- <name>`**, not `npx shadcn add` directly. The wrapper runs the shadcn CLI, so the file lands in `src/components/ui/` styled with the theme tokens. Then it points the new file's `cn` import at `@/lib/utils`, because shadcn 4 otherwise adds a separate `cn` npm package. Afterwards, check the new component's colors are token classes. Restyle surfaces to match the kit if needed (e.g. active states use `bg-card shadow-elevation-1` like `Segmented`).
 
@@ -166,6 +180,7 @@ Need a component the kit doesn't have (tabs that switch panels inside a card, ta
 - The person picks mode and palette in Settings > Appearance, or toggles light/dark in the top bar. The choice is saved under `APP.storagePrefix`.
 - To change the app's default look, set `defaultMode` / `defaultPalette` in `src/app/config.ts` (palette ids are in `src/lib/palettes.ts`). That's all it takes: the theme is applied before React's first render. The `:root` values in `theme.css` only show for the instant before the script loads.
 - To add a brand palette, add an entry to `PALETTES` in `src/lib/palettes.ts` (primary hue/chroma, neutral hue/chroma, drawer style). Don't edit token values in `theme.css` to restyle. `theme.ts` overwrites them at runtime.
+- Picture themes are palettes with a `backdrop`: an SVG drawing behind the app, with the page, cards and drawer as frosted glass (`layout: 'panel'`, `'glass'`, or `'liquid'` for clearer, heavier glass with lit edges over dark, moody pictures). To add one, write a drawing module in `scripts/backdrops/` (copy one that exists; helper files start with `_`), run `npm run backdrops` to write `src/assets/backdrops/<id>.svg`, import it in `palettes.ts`, and add the palette. Cards on these themes are translucent; keep page content inside cards or headers so it stays readable over the picture.
 - Read the current mode with `useThemeMode()` when code needs it (e.g. a chart library's theme option).
 
 ## Don't

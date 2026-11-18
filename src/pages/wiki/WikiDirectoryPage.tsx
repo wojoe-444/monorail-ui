@@ -67,7 +67,13 @@ export function WikiDirectoryPage() {
             <Label htmlFor="dir-search">Search</Label>
             <div className="relative">
               <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input id="dir-search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Station or neighborhood" className="pl-9" />
+              <Input
+                id="dir-search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Station or neighborhood"
+                className="pl-9"
+              />
             </div>
           </div>
           <div className="flex flex-col gap-1.5">
@@ -130,7 +136,10 @@ export function WikiDirectoryPage() {
                 <ul className="divide-y">
                   {stations.map((s) => (
                     <li key={s.id}>
-                      <a href={href('/wiki/station')} className="flex flex-col gap-2 px-4 py-3 hover:bg-accent/50 sm:flex-row sm:items-center sm:gap-4">
+                      <a
+                        href={href('/wiki/station')}
+                        className="flex flex-col gap-2 px-4 py-3 hover:bg-accent/50 sm:flex-row sm:items-center sm:gap-4"
+                      >
                         <div className="min-w-0 sm:w-48">
                           <div className="flex items-center gap-1.5 truncate text-sm font-medium">
                             {s.name}
@@ -143,9 +152,7 @@ export function WikiDirectoryPage() {
                             <LineChip key={l} id={l} short />
                           ))}
                         </div>
-                        <div className="text-xs text-muted-foreground tabular-nums sm:w-28 sm:text-right">
-                          {fmt(s.weekday)} / weekday
-                        </div>
+                        <div className="text-xs text-muted-foreground tabular-nums sm:w-28 sm:text-right">{fmt(s.weekday)} / weekday</div>
                       </a>
                     </li>
                   ))}

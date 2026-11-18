@@ -1,4 +1,16 @@
-import { ArrowRight, BookOpen, Database, FilePlus2, History, Search, TrainFront, TriangleAlert, Wrench, Warehouse, MapPin } from 'lucide-react'
+import {
+  ArrowRight,
+  BookOpen,
+  Database,
+  FilePlus2,
+  History,
+  Search,
+  TrainFront,
+  TriangleAlert,
+  Wrench,
+  Warehouse,
+  MapPin,
+} from 'lucide-react'
 
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Badge } from '@/components/ui/badge'
@@ -80,9 +92,9 @@ export function WikiPortalPage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <p className="text-sm leading-relaxed">
-              The Red Line carries more riders than any other 'L' route. It runs on the North Side Main Line elevated
-              structure, dives into the State Street subway downtown, and finishes in the median of the Dan Ryan Expressway.
-              It is one of only two lines with overnight Owl service.
+              The Red Line carries more riders than any other 'L' route. It runs on the North Side Main Line elevated structure, dives into
+              the State Street subway downtown, and finishes in the median of the Dan Ryan Expressway. It is one of only two lines with
+              overnight Owl service.
             </p>
             <div className="flex flex-wrap gap-2">
               <Badge variant="secondary">33 stations</Badge>
@@ -191,7 +203,10 @@ export function WikiPortalPage() {
             <ul className="flex flex-col gap-2">
               {LINES.map((l) => (
                 <li key={l.id}>
-                  <a href={href('/wiki/article')} className="flex items-center justify-between gap-3 rounded-md px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground">
+                  <a
+                    href={href('/wiki/article')}
+                    className="flex items-center justify-between gap-3 rounded-md px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground"
+                  >
                     <LineChip id={l.id} />
                     <span className="truncate text-xs text-muted-foreground">
                       {l.terminals[0]} – {l.terminals[1]}
