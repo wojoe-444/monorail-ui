@@ -13,10 +13,29 @@
 import alpine from '@/assets/backdrops/alpine.svg'
 import aurora from '@/assets/backdrops/aurora.svg'
 import autumn from '@/assets/backdrops/autumn.svg'
+import bauhaus from '@/assets/backdrops/bauhaus.svg'
+import canyonMesaDark from '@/assets/backdrops/canyon-mesa-dark.svg'
+import canyonMesa from '@/assets/backdrops/canyon-mesa.svg'
+import cherryBlossom from '@/assets/backdrops/cherry-blossom.svg'
+import coralReef from '@/assets/backdrops/coral-reef.svg'
 import dunes from '@/assets/backdrops/dunes.svg'
+import ember from '@/assets/backdrops/ember.svg'
+import lagoon from '@/assets/backdrops/lagoon.svg'
+import lavenderFields from '@/assets/backdrops/lavender-fields.svg'
+import meadow from '@/assets/backdrops/meadow.svg'
+import mistyPines from '@/assets/backdrops/misty-pines.svg'
+import moonlitLake from '@/assets/backdrops/moonlit-lake.svg'
+import nebula from '@/assets/backdrops/nebula.svg'
+import neonRain from '@/assets/backdrops/neon-rain.svg'
 import ocean from '@/assets/backdrops/ocean.svg'
+import paperCut from '@/assets/backdrops/paper-cut.svg'
+import riceTerraces from '@/assets/backdrops/rice-terraces.svg'
+import savanna from '@/assets/backdrops/savanna.svg'
+import stormSea from '@/assets/backdrops/storm-sea.svg'
 import topoDark from '@/assets/backdrops/topo-dark.svg'
 import topo from '@/assets/backdrops/topo.svg'
+import watercolor from '@/assets/backdrops/watercolor.svg'
+import winterVillage from '@/assets/backdrops/winter-village.svg'
 
 export type SidebarStyle = 'dark' | 'light' | 'bold'
 
@@ -66,8 +85,10 @@ export interface Backdrop {
   /**
    * `panel`: the drawer sits right on the picture and the page is one frosted sheet.
    * `glass`: the drawer, top bar and page float as separate frosted pieces.
+   * `liquid`: the `glass` layout in clearer, heavier glass with lit edges, a
+   * sheen and fine grain; made for moody, dark pictures.
    */
-  layout: 'panel' | 'glass'
+  layout: 'panel' | 'glass' | 'liquid'
   /** How far dark mode darkens the picture, 0 to 1. */
   dim: number
   /** Shown while the picture loads. */
@@ -81,6 +102,24 @@ const BACKDROPS = {
   ocean: { src: ocean, layout: 'glass', dim: 0.5, color: 'oklch(0.75 0.06 210)' },
   autumn: { src: autumn, layout: 'panel', dim: 0.5, color: 'oklch(0.8 0.08 75)' },
   topo: { src: topo, dark: topoDark, layout: 'glass', dim: 0, color: 'oklch(0.95 0.02 85)' },
+  cherryBlossom: { src: cherryBlossom, layout: 'glass', dim: 0.45, color: 'oklch(0.93 0.025 40)' },
+  lagoon: { src: lagoon, layout: 'glass', dim: 0.5, color: 'oklch(0.75 0.09 210)' },
+  lavenderFields: { src: lavenderFields, layout: 'glass', dim: 0.45, color: 'oklch(0.7 0.08 310)' },
+  riceTerraces: { src: riceTerraces, layout: 'panel', dim: 0.45, color: 'oklch(0.8 0.08 140)' },
+  coralReef: { src: coralReef, layout: 'panel', dim: 0.3, color: 'oklch(0.5 0.08 225)' },
+  meadow: { src: meadow, layout: 'glass', dim: 0.45, color: 'oklch(0.78 0.08 200)' },
+  canyonMesa: { src: canyonMesa, dark: canyonMesaDark, layout: 'panel', dim: 0, color: 'oklch(0.57 0.06 25)' },
+  winterVillage: { src: winterVillage, layout: 'glass', dim: 0.45, color: 'oklch(0.84 0.02 257)' },
+  savanna: { src: savanna, layout: 'panel', dim: 0.45, color: 'oklch(0.64 0.1 50)' },
+  paperCut: { src: paperCut, layout: 'glass', dim: 0.4, color: 'oklch(0.75 0.05 17)' },
+  bauhaus: { src: bauhaus, layout: 'glass', dim: 0.5, color: 'oklch(0.75 0.03 73)' },
+  watercolor: { src: watercolor, layout: 'glass', dim: 0.45, color: 'oklch(0.74 0.03 320)' },
+  neonRain: { src: neonRain, layout: 'liquid', dim: 0.1, color: 'oklch(0.2 0.07 305)' },
+  mistyPines: { src: mistyPines, layout: 'liquid', dim: 0.15, color: 'oklch(0.25 0.03 220)' },
+  stormSea: { src: stormSea, layout: 'liquid', dim: 0.12, color: 'oklch(0.22 0.02 230)' },
+  moonlitLake: { src: moonlitLake, layout: 'liquid', dim: 0.15, color: 'oklch(0.25 0.07 275)' },
+  ember: { src: ember, layout: 'liquid', dim: 0.1, color: 'oklch(0.2 0.07 30)' },
+  nebula: { src: nebula, layout: 'liquid', dim: 0.08, color: 'oklch(0.2 0.08 290)' },
 } satisfies Record<string, Backdrop>
 
 export const DEFAULT_PALETTE = 'sand-ink'
@@ -258,6 +297,137 @@ export const PALETTES: Palette[] = [
         ? { highlight: o(0.74, 0.14, 55), 'highlight-foreground': o(0.2, 0.04, 55), glass: o(0.2, 0.035, 245, 0.56), card: o(0.21, 0.04, 245, 0.62), sidebar: o(0.17, 0.04, 245, 0.6) }
         : { highlight: o(0.62, 0.16, 48), 'highlight-foreground': o(0.99, 0.01, 50) },
   },
+  // Pictures: daytime
+  {
+    id: 'cherry-blossom',
+    name: 'Cherry Blossom',
+    blurb: 'Ink-wash branches in bloom on blush paper; floating frosted glass',
+    ph: 355, pc: 0.13, nh: 35, nc: 0.012, sidebar: 'dark', sh: 350,
+    backdrop: BACKDROPS.cherryBlossom,
+  },
+  {
+    id: 'lagoon',
+    name: 'Lagoon',
+    blurb: 'Turquoise shallows, cumulus and palms; floating frosted glass',
+    ph: 200, pc: 0.12, nh: 210, nc: 0.012, sidebar: 'dark', sh: 215,
+    backdrop: BACKDROPS.lagoon,
+  },
+  {
+    id: 'lavender-fields',
+    name: 'Lavender Fields',
+    blurb: 'Lavender rows to a golden horizon; floating frosted glass',
+    ph: 300, pc: 0.14, nh: 300, nc: 0.012, sidebar: 'dark', sh: 300,
+    backdrop: BACKDROPS.lavenderFields,
+  },
+  {
+    id: 'rice-terraces',
+    name: 'Rice Terraces',
+    blurb: 'Green terraces under misty ridges; drawer on the forest edge',
+    ph: 130, pc: 0.13, nh: 145, nc: 0.012, sidebar: 'dark',
+    backdrop: BACKDROPS.riceTerraces,
+  },
+  {
+    id: 'coral-reef',
+    name: 'Coral Reef',
+    blurb: 'Light rays over a reef; drawer on the dark coral, page on a sheet',
+    ph: 30, pc: 0.14, nh: 220, nc: 0.014, sidebar: 'dark', sh: 230,
+    backdrop: BACKDROPS.coralReef,
+  },
+  {
+    id: 'meadow',
+    name: 'Meadow',
+    blurb: 'Rolling hills, wildflowers and a big sky; floating frosted glass',
+    ph: 245, pc: 0.13, nh: 120, nc: 0.01, sidebar: 'dark', sh: 235,
+    backdrop: BACKDROPS.meadow,
+  },
+
+  // Pictures: illustrated
+  {
+    id: 'canyon-mesa',
+    name: 'Canyon Mesa',
+    blurb: 'Red-rock mesas at sunset, moonlit at night; drawer on the picture',
+    ph: 38, pc: 0.14, nh: 30, nc: 0.012, sidebar: 'dark', sh: 25,
+    backdrop: BACKDROPS.canyonMesa,
+  },
+  {
+    id: 'winter-village',
+    name: 'Winter Village',
+    blurb: 'Snowy hills, lit cabins and pines; floating frosted glass',
+    ph: 245, pc: 0.12, nh: 250, nc: 0.012, sidebar: 'dark', sh: 235,
+    backdrop: BACKDROPS.winterVillage,
+  },
+  {
+    id: 'savanna',
+    name: 'Savanna',
+    blurb: 'Acacias under a huge low sun; drawer on the picture',
+    ph: 50, pc: 0.15, nh: 45, nc: 0.012, sidebar: 'dark', sh: 30,
+    backdrop: BACKDROPS.savanna,
+  },
+  {
+    id: 'paper-cut',
+    name: 'Paper Cut',
+    blurb: 'Layered paper-cut hills in a dusk ramp; floating frosted glass',
+    ph: 350, pc: 0.13, nh: 330, nc: 0.012, sidebar: 'dark', sh: 310,
+    backdrop: BACKDROPS.paperCut,
+  },
+  {
+    id: 'bauhaus',
+    name: 'Bauhaus',
+    blurb: 'Modernist circles and bars on grainy paper; floating glass',
+    ph: 252, pc: 0.12, nh: 75, nc: 0.01, sidebar: 'dark', sh: 60,
+    backdrop: BACKDROPS.bauhaus,
+  },
+  {
+    id: 'watercolor',
+    name: 'Watercolor',
+    blurb: 'Soft watercolour washes on cold-press paper; floating glass',
+    ph: 265, pc: 0.13, nh: 300, nc: 0.01, sidebar: 'dark', sh: 280,
+    backdrop: BACKDROPS.watercolor,
+  },
+
+  // Moody (liquid glass)
+  {
+    id: 'neon-rain',
+    name: 'Neon Rain',
+    blurb: 'A rainy city at night; neon glows on wet streets',
+    ph: 340, pc: 0.19, nh: 300, nc: 0.014, sidebar: 'dark', sh: 295,
+    backdrop: BACKDROPS.neonRain,
+  },
+  {
+    id: 'misty-pines',
+    name: 'Misty Pines',
+    blurb: 'Pine ridges in blue-hour fog; one warm light in the trees',
+    ph: 65, pc: 0.14, nh: 215, nc: 0.012, sidebar: 'dark', sh: 215,
+    backdrop: BACKDROPS.mistyPines,
+  },
+  {
+    id: 'storm-sea',
+    name: 'Storm Sea',
+    blurb: 'Storm clouds over a dark sea; a lighthouse beam, pale horizon',
+    ph: 85, pc: 0.12, nh: 225, nc: 0.01, sidebar: 'dark', sh: 225,
+    backdrop: BACKDROPS.stormSea,
+  },
+  {
+    id: 'moonlit-lake',
+    name: 'Moonlit Lake',
+    blurb: 'A full moon over a misty lake; the shore mirrored below',
+    ph: 270, pc: 0.12, nh: 270, nc: 0.014, sidebar: 'dark', sh: 268,
+    backdrop: BACKDROPS.moonlitLake,
+  },
+  {
+    id: 'ember',
+    name: 'Ember',
+    blurb: 'Volcanic night; lava rivers, embers and smoke lit from below',
+    ph: 45, pc: 0.18, nh: 25, nc: 0.012, sidebar: 'dark', sh: 20,
+    backdrop: BACKDROPS.ember,
+  },
+  {
+    id: 'nebula',
+    name: 'Nebula',
+    blurb: 'Violet, teal and rose nebula over stars; a dark planet edge',
+    ph: 295, pc: 0.17, nh: 285, nc: 0.014, sidebar: 'dark', sh: 285,
+    backdrop: BACKDROPS.nebula,
+  },
 ]
 
 /** Display groups, in PALETTES order. */
@@ -268,6 +438,9 @@ export const PALETTE_GROUPS: { label: string; from: number; to: number }[] = [
   { label: 'Nature', from: 28, to: 31 },
   { label: 'Hues', from: 31, to: 37 },
   { label: 'Pictures', from: 37, to: 43 },
+  { label: 'Pictures: daytime', from: 43, to: 49 },
+  { label: 'Pictures: illustrated', from: 49, to: 55 },
+  { label: 'Moody (liquid glass)', from: 55, to: 61 },
 ]
 
 export function findPalette(id: string | null | undefined): Palette {
@@ -434,6 +607,38 @@ function glass(p: Palette, b: Backdrop, dark: boolean): Record<string, string> {
   const { nh, ph, pc } = p
   const sh = p.sh ?? nh
   const panel = b.layout === 'panel'
+  if (b.layout === 'liquid') {
+    return {
+      background: 'transparent',
+      ...(dark
+        ? {
+            glass: o(0.16, 0.025, nh, 0.38),
+            card: o(0.2, 0.025, nh, 0.34),
+            border: o(1, 0, 0, 0.09),
+            input: o(1, 0, 0, 0.14),
+            muted: o(1, 0, 0, 0.06),
+            secondary: o(1, 0, 0, 0.1),
+            sidebar: o(0.14, 0.025, sh, 0.36),
+          }
+        : {
+            glass: o(0.975, 0.008, nh, 0.62),
+            card: o(1, 0, 0, 0.52),
+            border: o(1, 0, 0, 0.5),
+            input: o(0.3, 0.03, nh, 0.16),
+            muted: o(0.3, 0.03, nh, 0.07),
+            secondary: o(0.3, 0.03, nh, 0.09),
+            sidebar: o(0.16, 0.025, sh, 0.34),
+          }),
+      'sidebar-foreground': o(0.98, 0.005, nh),
+      'sidebar-muted-foreground': o(0.98, 0, 0, 0.66),
+      'sidebar-accent': o(1, 0, 0, 0.1),
+      'sidebar-accent-foreground': o(1, 0, 0),
+      'sidebar-primary': o(1, 0, 0, 0.92),
+      'sidebar-primary-foreground': o(0.28, pc, ph),
+      'sidebar-border': o(1, 0, 0, 0.12),
+      'sidebar-ring': o(1, 0, 0, 0.6),
+    }
+  }
   return {
     background: 'transparent',
     ...(dark
