@@ -78,7 +78,6 @@ function smoke(rand, x, y, s) {
 export default {
   id: 'winter-village',
   draw() {
-    const rand = rng(2024)
     let defs = lgu('sky', 0, 760, [
       [0, '#7d9cc2'],
       [0.4, '#b4c6de'],
