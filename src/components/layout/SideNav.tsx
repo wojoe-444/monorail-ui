@@ -1,18 +1,9 @@
-import { useState } from 'react'
-import { ChevronDown, ChevronRight, Circle } from 'lucide-react'
+import { ChevronRight, Circle } from 'lucide-react'
 
 import { APP } from '@/app/config'
 import { BrandTile } from '@/components/layout/BrandMark'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { readJson, writeJson } from '@/lib/prefs'
 import { cn } from '@/lib/utils'
 
 import { visibleItems, type NavItem, type NavSection } from './nav'
@@ -28,14 +19,13 @@ interface SideNavProps {
 /**
  * Permanent navigation drawer: a 64px brand header aligned with the top bar,
  * grouped sections with overline labels, 40px items on soft pills, and the
- * active item filled with the drawer's primary color. Collapses to a 56px
- * icon rail; the toggle lives in the top bar.
+ * active item filled with the drawer's primary color. By default it is a
+ * 56px icon rail where hovering or focusing an icon shows its name in a
+ * tooltip; the toggle in the top bar opens it to 256px with labels.
  *
- * Items with subpages are collapsible groups drawn as a tree: the subpages
- * are plain text rows on a thin guide line under the parent's icon, the
- * current one tinted with a primary bar. Open/closed is remembered per group;
- * a closed group that holds the current page shows a dot. On the icon rail a
- * group's icon opens a menu with its pages.
+ * Items with subpages never expand inside the drawer: they open a panel just
+ * right of it with the item's pages (`NavFlyout`), in the open drawer and on
+ * the rail alike.
  *
  * Colors come from the sidebar-* tokens, so each palette's drawer style
  * (dark, light or bold) applies without changes here.
@@ -92,7 +82,7 @@ export function SideNav({ sections, current, onNavigate, collapsed }: SideNavPro
                 {items.map((item) => (
                   <li key={item.path}>
                     {item.children && item.children.length > 0 ? (
-                      <NavGroup item={item} current={current} collapsed={collapsed} onNavigate={onNavigate} />
+                      <NavFlyout item={item} current={current} collapsed={collapsed} onNavigate={onNavigate} />
                     ) : (
                       <NavButton item={item} current={current} collapsed={collapsed} onNavigate={onNavigate} />
                     )}
@@ -120,6 +110,11 @@ export function SideNav({ sections, current, onNavigate, collapsed }: SideNavPro
       )}
     </aside>
   )
+}
+
+/** Items sit 16px (open drawer) or 8px (rail) inside the drawer's edge; this puts a tooltip or panel 8px past it. */
+function edgeOffset(collapsed: boolean) {
+  return collapsed ? 16 : 24
 }
 
 function NavButton({
@@ -170,24 +165,21 @@ function NavButton({
   return (
     <Tooltip>
       <TooltipTrigger asChild>{button}</TooltipTrigger>
-      <TooltipContent side="right">{item.label}</TooltipContent>
+      <TooltipContent side="right" sideOffset={edgeOffset(collapsed)}>
+        {item.label}
+      </TooltipContent>
     </Tooltip>
   )
 }
 
-const OPEN_KEY = 'nav.open'
-
-/** Open/closed state of one nav group, remembered in prefs. Groups start closed (the current page's group opens itself), so a large catalog stays scannable. */
-function useGroupOpen(path: string, fallback: boolean): [boolean, (open: boolean) => void] {
-  const [open, setOpenState] = useState(() => readJson<Record<string, boolean>>(OPEN_KEY, {})[path] ?? fallback)
-  const setOpen = (next: boolean) => {
-    setOpenState(next)
-    writeJson(OPEN_KEY, { ...readJson<Record<string, boolean>>(OPEN_KEY, {}), [path]: next })
-  }
-  return [open, setOpen]
-}
-
-function NavGroup({
+/**
+ * An item with subpages. It never expands inside the drawer: clicking it (or
+ * Enter / Space / arrow keys) opens a panel just right of the drawer's edge
+ * listing the item's own page first, then its subpages, the current one
+ * highlighted. Same in the open drawer and on the icon rail. In the open
+ * drawer the item shows the open subpage's name under its label.
+ */
+function NavFlyout({
   item,
   current,
   collapsed,
@@ -199,141 +191,74 @@ function NavGroup({
   onNavigate: (path: string) => void
 }) {
   const children = item.children ?? []
-  const activeChild = children.find((c) => c.path === current)
-  const [open, setOpen] = useGroupOpen(item.path, !!activeChild || item.path === current)
-
-  // Arriving on a subpage from elsewhere (a link) opens its group.
-  // Only when the current subpage changes, so the person can still close it.
-  const activeChildPath = activeChild?.path
-  const [seenChild, setSeenChild] = useState(activeChildPath)
-  if (seenChild !== activeChildPath) {
-    setSeenChild(activeChildPath)
-    if (activeChildPath && !open) setOpen(true)
-  }
-
-  if (collapsed) return <RailGroup item={item} current={current} onNavigate={onNavigate} />
-
   const active = item.path === current
+  const activeChild = children.find((c) => c.path === current)
   const Icon = item.icon ?? Circle
-  const Chevron = open ? ChevronDown : ChevronRight
-  return (
-    <div>
-      <div
+  const pages: { path: string; label: string; badge?: string }[] = [{ path: item.path, label: 'Overview' }, ...children]
+
+  const trigger = (
+    <DropdownMenuTrigger asChild>
+      <button
+        type="button"
+        aria-label={collapsed ? `${item.label} pages` : undefined}
         className={cn(
-          'flex h-10 w-full items-center rounded-md text-sm transition-colors',
-          active
+          'relative flex h-10 w-full items-center gap-3 rounded-md px-3 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
+          collapsed && 'justify-center px-0',
+          active || activeChild
             ? 'bg-sidebar-primary font-medium text-sidebar-primary-foreground shadow-md shadow-sidebar-primary/25'
-            : 'bg-sidebar-accent/70 text-sidebar-accent-foreground hover:bg-sidebar-accent',
-          !active && activeChild && 'font-medium',
+            : 'bg-sidebar-accent/70 text-sidebar-accent-foreground hover:bg-sidebar-accent data-[state=open]:bg-sidebar-accent',
         )}
       >
-        <button
-          type="button"
-          onClick={() => {
-            onNavigate(item.path)
-            if (!open) setOpen(true)
-          }}
-          aria-current={active ? 'page' : undefined}
-          className="flex h-full min-w-0 flex-1 items-center gap-3 rounded-md pl-3 outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
-        >
-          <Icon className="size-4 shrink-0" />
-          <span className="flex-1 truncate text-left">{item.label}</span>
-          {!open && activeChild && (
-            <span
-              className={cn('size-1.5 shrink-0 rounded-full', active ? 'bg-sidebar-primary-foreground' : 'bg-sidebar-primary')}
-              aria-label={`${activeChild.label} is open`}
-            />
-          )}
-        </button>
-        <button
-          type="button"
-          onClick={() => setOpen(!open)}
-          aria-expanded={open}
-          aria-label={open ? `Collapse ${item.label}` : `Expand ${item.label}`}
-          className="mr-1 flex size-8 shrink-0 items-center justify-center rounded-md opacity-60 outline-none hover:opacity-100 focus-visible:ring-2 focus-visible:ring-sidebar-ring"
-        >
-          <Chevron className="size-4" />
-        </button>
-      </div>
-      {open && (
-        // Tree: a hairline guide under the parent's icon (12px padding + half of 16px).
-        <ul className="mt-0.5 mb-1 ml-[19px] flex flex-col border-l border-sidebar-border" aria-label={`${item.label} pages`}>
-          {children.map((child) => {
-            const on = child.path === current
-            return (
-              <li key={child.path}>
-                <button
-                  type="button"
-                  onClick={() => onNavigate(child.path)}
-                  aria-current={on ? 'page' : undefined}
-                  className={cn(
-                    '-ml-px flex h-8 w-full items-center gap-2 rounded-r-md border-l-2 pr-3 pl-5 text-left text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
-                    on
-                      ? 'border-sidebar-primary bg-sidebar-primary/10 font-semibold text-sidebar-accent-foreground dark:text-sidebar-primary'
-                      : 'border-transparent text-sidebar-foreground hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground',
-                  )}
-                >
-                  <span className="flex-1 truncate">{child.label}</span>
-                  {child.badge && (
-                    <span className="min-w-5 rounded-full bg-warning px-1.5 text-center text-[11px] leading-5 font-semibold text-black">
-                      {child.badge}
-                    </span>
-                  )}
-                </button>
-              </li>
-            )
-          })}
-        </ul>
-      )}
-    </div>
+        <Icon className="size-4 shrink-0" />
+        {!collapsed && (
+          <span className="flex min-w-0 flex-1 flex-col text-left leading-tight">
+            <span className="truncate">{item.label}</span>
+            {activeChild && <span className="truncate text-[11px] font-normal opacity-75">{activeChild.label}</span>}
+          </span>
+        )}
+        <ChevronRight className={cn('shrink-0 opacity-60', collapsed ? 'absolute right-0.5 size-3' : 'size-4')} />
+      </button>
+    </DropdownMenuTrigger>
   )
-}
 
-/** A group on the 56px icon rail: the icon opens a menu with the group's pages. */
-function RailGroup({ item, current, onNavigate }: { item: NavItem; current: string; onNavigate: (path: string) => void }) {
-  const children = item.children ?? []
-  const active = item.path === current
-  const holdsCurrent = children.some((c) => c.path === current)
-  const Icon = item.icon ?? Circle
   return (
-    <DropdownMenu>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              aria-label={`${item.label} pages`}
-              className={cn(
-                'relative flex h-10 w-full items-center justify-center rounded-md text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
-                active || holdsCurrent
-                  ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-md shadow-sidebar-primary/25'
-                  : 'bg-sidebar-accent/70 text-sidebar-accent-foreground hover:bg-sidebar-accent',
-              )}
-            >
-              <Icon className="size-4 shrink-0" />
-              <ChevronRight className="absolute right-1 size-3 opacity-60" />
-            </button>
-          </DropdownMenuTrigger>
-        </TooltipTrigger>
-        <TooltipContent side="right">{item.label}</TooltipContent>
-      </Tooltip>
-      <DropdownMenuContent side="right" align="start" sideOffset={12}>
-        <DropdownMenuLabel>{item.label}</DropdownMenuLabel>
-        <DropdownMenuItem onSelect={() => onNavigate(item.path)} className={cn(active && 'font-semibold')}>
-          <Icon />
-          Overview
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        {children.map((child) => {
-          const ChildIcon = child.icon
+    <DropdownMenu modal={false}>
+      {collapsed ? (
+        <Tooltip>
+          <TooltipTrigger asChild>{trigger}</TooltipTrigger>
+          <TooltipContent side="right" sideOffset={edgeOffset(collapsed)}>
+            {item.label}
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        trigger
+      )}
+      <DropdownMenuContent
+        side="right"
+        align="start"
+        sideOffset={edgeOffset(collapsed)}
+        alignOffset={-8}
+        aria-label={`${item.label} pages`}
+        className="min-w-44 rounded-xl p-1.5"
+      >
+        {pages.map((page) => {
+          const on = page.path === current
           return (
             <DropdownMenuItem
-              key={child.path}
-              onSelect={() => onNavigate(child.path)}
-              className={cn(child.path === current && 'font-semibold')}
+              key={page.path}
+              onSelect={() => onNavigate(page.path)}
+              aria-current={on ? 'page' : undefined}
+              className={cn(
+                'h-9 px-3 text-muted-foreground data-[highlighted]:bg-muted data-[highlighted]:text-foreground',
+                on && 'bg-muted font-semibold text-foreground',
+              )}
             >
-              {ChildIcon && <ChildIcon />}
-              {child.label}
+              <span className="flex-1 truncate">{page.label}</span>
+              {page.badge && (
+                <span className="min-w-5 rounded-full bg-warning px-1.5 text-center text-[11px] leading-5 font-semibold text-black">
+                  {page.badge}
+                </span>
+              )}
             </DropdownMenuItem>
           )
         })}

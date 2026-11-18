@@ -59,7 +59,7 @@ The Catalog page reads `NAV`, so a new page shows up there by itself. Give it a 
 1. Create `src/pages/ThingsPage.tsx` exporting `function ThingsPage()`.
 2. Add it to `NAV` in `src/app/routes.tsx`: `{ path: '/things', label: 'Things', icon: Boxes, page: ThingsPage }`. Pick an icon from lucide-react.
    - Put it in an existing section or add a `{ heading: 'Section', items: [...] }`.
-   - Subpages: add `children: [...]` to an item (one level deep). The breadcrumb shows Section > Parent > Page.
+   - Subpages: add `children: [...]` to an item (one level deep). The drawer never expands them in place: the item opens a panel beside the drawer listing its own page (as Overview) and its subpages. The breadcrumb shows Section > Parent > Page.
    - Canvas, editor or map pages: add `layout: 'full'` (no padding or max width, and the page handles its own scrolling).
    - Detail pages that shouldn't be in the drawer: add them as a `hidden: true` child of the list page, so the breadcrumb reads Section > Things > Thing and the drawer keeps Things highlighted. Pass the id as a query: `navigate('/things/detail?id=42')`, then `useSearchParams().get('id')` in the page.
    - Sections inside one page: see "Pages with tabs or steps" below. Don't make each tab its own drawer item.
