@@ -25,13 +25,14 @@ React 19, TypeScript (strict), Vite, Tailwind CSS v4, Radix primitives (`radix-u
 | `src/app/config.ts` | App name, tagline, storage prefix, default theme. Edit first in a new app. |
 | `src/app/routes.tsx` | Every page and the drawer's sections. **The one place to add a page.** |
 | `src/pages/` | One file per page. |
-| `src/components/layout/` | `AppShell`, `SideNav`, `TopBar`, `PageHeader`, `BrandMark`, nav types. |
+| `src/components/layout/` | `AppShell`, `SideNav`, `TopBar`, `PageHeader`, `PageTabs`, `PageSteps`, `BrandMark`, nav types. |
 | `src/components/ui/` | The UI kit (Button, Card, Dialog, …). |
 | `src/components/charts/` | `StatTile`, `Sparkline`, `Legend`, `ChartTooltipContent`, series colors. |
 | `src/components/theme/ThemePicker.tsx` | Appearance card used on the Settings page. |
 | `src/lib/theme.ts` | Mode + palette store: `useThemeMode`, `usePalette`, `setThemeMode`, `setPalette`. |
 | `src/lib/palettes.ts` | The color schemes. Each expands into every color token. |
 | `src/lib/prefs.ts` | `prefs` / `readJson` / `writeJson`: localStorage that survives storage being unavailable. |
+| `src/hooks/usePageTab.ts` | The active tab / step of a page, kept in the URL (`?tab=`). |
 | `src/lib/router.ts` | Hash router: `useRoute`, `navigate`, `href`, `useSearchParams`. |
 | `src/styles/theme.css` | Token defaults, the Tailwind `@theme` mapping, base styles. |
 
@@ -45,6 +46,7 @@ Feature code that isn't a page goes in `src/features/<feature>/` (components, ho
    - Subpages: add `children: [...]` to an item (one level deep). The breadcrumb shows Section > Parent > Page.
    - Canvas, editor or map pages: add `layout: 'full'` (no padding or max width, and the page handles its own scrolling).
    - Detail pages that shouldn't be in the drawer: add them as a `hidden: true` child of the list page, so the breadcrumb reads Section > Things > Thing and the drawer keeps Things highlighted. Pass the id as a query: `navigate('/things/detail?id=42')`, then `useSearchParams().get('id')` in the page.
+   - Sections inside one page: see "Pages with tabs or steps" below. Don't make each tab its own drawer item.
    - Links: use `navigate('/path')` in click handlers, and `<a href={href('/path')}>` for real links (rows, cards, text links) so open-in-new-tab works. Both come from `@/lib/router`.
 3. Start the page the standard way:
 
@@ -60,6 +62,35 @@ export function ThingsPage() {
 ```
 
 `src/pages/HomePage.tsx` and `src/pages/ComponentsPage.tsx` show every component in use. Copy patterns from them.
+
+### Pages with tabs or steps
+
+When one page has several sections (a detail page with Overview / Activity / Settings), keep one drawer item and put left-to-right sub-navigation in the page body, right under `PageHeader`:
+
+- **`PageTabs` is the default.** Chips with an optional icon and count. The bar sticks under the top bar while the page scrolls. Pass `sticky={false}` on `layout: 'full'` pages or inside a card.
+- **`PageSteps`** is for sub-pages in a set order (setup flows, multi-page forms). Pair it with `PageStepsFooter` for Back / Next. Later steps aren't clickable unless you pass `allowSkip`.
+- Both keep the active section in the URL (`?tab=<id>`), so sections are linkable and back/forward works. Read it with `usePageTab(tabs)`, which returns `[active, setActive, hrefFor]`. The first tab is the default and has no query.
+- Use `Segmented` instead for a compact toggle that changes a view in place (chart range, list or grid). Use `PageTabs` when the sections are different content.
+
+```tsx
+const TABS: PageTab[] = [
+  { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+  { id: 'activity', label: 'Activity', icon: Activity, count: 12 },
+]
+
+export function ThingPage() {
+  const [tab] = usePageTab(TABS)
+  return (
+    <div className="flex flex-col gap-6">
+      <PageHeader title="Thing" />
+      <PageTabs tabs={TABS} aria-label="Thing sections" />
+      {tab === 'overview' ? <Overview /> : <ActivityList />}
+    </div>
+  )
+}
+```
+
+Full examples: `src/pages/TabbedPageExample.tsx` and `src/pages/StepsPageExample.tsx`.
 
 ## Design rules
 
@@ -81,7 +112,7 @@ Opacity modifiers are fine (`bg-primary/10`). Status hues mean the same thing in
 
 **Components first.** Use the kit before writing markup: `Button` (variants `default`, `soft`, `outline`, `secondary`, `ghost`, `link`, `destructive`; sizes `sm`, `default`, `lg`, `icon`), `Card` + `CardHeader`/`CardTitle`/`CardDescription`/`CardAction`/`CardContent`/`CardFooter`, `Badge` for status, `Dialog` for modal tasks, `DropdownMenu` for row actions, `Tooltip` for icon-only buttons, `Segmented` for a compact 2–4 option toggle (view mode, filter, time range), `NativeSelect` for picking from a list, `Switch` for on/off settings, `StatTile` for KPIs.
 
-Need a component the kit doesn't have (tabs for switching between panels of content, table, popover, sheet, command, calendar)? Add it with **`npm run ui:add -- <name>`**, not `npx shadcn add` directly. The wrapper runs the shadcn CLI, so the file lands in `src/components/ui/` styled with the theme tokens. Then it points the new file's `cn` import at `@/lib/utils`, because shadcn 4 otherwise adds a separate `cn` npm package. Afterwards, check the new component's colors are token classes. Restyle surfaces to match the kit if needed (e.g. active states use `bg-card shadow-elevation-1` like `Segmented`).
+Need a component the kit doesn't have (tabs that switch panels inside a card, table, popover, sheet, command, calendar)? Add it with **`npm run ui:add -- <name>`**, not `npx shadcn add` directly. The wrapper runs the shadcn CLI, so the file lands in `src/components/ui/` styled with the theme tokens. Then it points the new file's `cn` import at `@/lib/utils`, because shadcn 4 otherwise adds a separate `cn` npm package. Afterwards, check the new component's colors are token classes. Restyle surfaces to match the kit if needed (e.g. active states use `bg-card shadow-elevation-1` like `Segmented`).
 
 **Layout and spacing.**
 - Blocks on a page: `flex flex-col gap-8`. Cards in a grid: `gap-4`. Inside a card: `gap-4` or `gap-6`.
