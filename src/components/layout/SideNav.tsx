@@ -28,7 +28,7 @@ interface SideNavProps {
 /**
  * Permanent navigation drawer: a 64px brand header aligned with the top bar,
  * grouped sections with overline labels, 40px items on soft pills, and the
- * active item filled with the drawer's primary color. Collapses to a 72px
+ * active item filled with the drawer's primary color. Collapses to a 56px
  * icon rail; the toggle lives in the top bar.
  *
  * Items with subpages are collapsible groups drawn as a tree: the subpages
@@ -48,7 +48,7 @@ export function SideNav({ sections, current, onNavigate, collapsed }: SideNavPro
       data-slot="sidebar"
       className={cn(
         'flex h-full shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width] duration-200',
-        collapsed ? 'w-[72px]' : 'w-[256px]',
+        collapsed ? 'w-14' : 'w-[256px]',
       )}
     >
       {/* Brand header: height matches the 64px top bar */}
@@ -70,6 +70,7 @@ export function SideNav({ sections, current, onNavigate, collapsed }: SideNavPro
       <nav
         className={cn(
           'min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-4 py-4',
+          collapsed && 'px-2',
           // Keep the narrow rail centered without a native scrollbar taking icon space.
           // Overflow still scrolls with the wheel, touch, and keyboard focus.
           collapsed && '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
@@ -86,7 +87,7 @@ export function SideNav({ sections, current, onNavigate, collapsed }: SideNavPro
                   {section.heading}
                 </div>
               )}
-              {section.heading && collapsed && <div className="mx-2 mb-3 h-px bg-sidebar-border" />}
+              {section.heading && collapsed && <div className="mx-1 mb-3 h-px bg-sidebar-border" />}
               <ul className="flex flex-col gap-1">
                 {items.map((item) => (
                   <li key={item.path}>
@@ -105,7 +106,7 @@ export function SideNav({ sections, current, onNavigate, collapsed }: SideNavPro
 
       {pinned.length > 0 && (
         // Pinned items (Settings) sit above the bottom edge, outside the scrolling list.
-        <div className="flex shrink-0 flex-col gap-1 border-t border-sidebar-border px-4 py-3">
+        <div className={cn('flex shrink-0 flex-col gap-1 border-t border-sidebar-border px-4 py-3', collapsed && 'px-2')}>
           {pinned.map((item) => (
             <NavButton
               key={item.path}
@@ -288,7 +289,7 @@ function NavGroup({
   )
 }
 
-/** A group on the 72px icon rail: the icon opens a menu with the group's pages. */
+/** A group on the 56px icon rail: the icon opens a menu with the group's pages. */
 function RailGroup({ item, current, onNavigate }: { item: NavItem; current: string; onNavigate: (path: string) => void }) {
   const children = item.children ?? []
   const active = item.path === current
