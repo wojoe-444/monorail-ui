@@ -51,7 +51,7 @@ export const GROUP_LABELS: Record<ExperimentGroup, string> = {
   favorite: 'Favorites',
   narrative: 'Narrative',
   annotated: 'Annotated graphs',
-  new: 'New options',
+  new: 'More dashboards',
   kept: 'Also kept',
 }
 
@@ -255,7 +255,11 @@ const BASE: Experiment[] = [
   },
 ]
 
-/** Every experiment: the base set, then the narrative and annotated groups (each owned in its own folder). */
-export const EXPERIMENTS: Experiment[] = [...BASE, ...NARRATIVE_EXPERIMENTS, ...ANNOTATED_EXPERIMENTS]
+export const GROUP_ORDER: ExperimentGroup[] = ['favorite', 'narrative', 'annotated', 'new', 'kept']
+
+/** Every experiment in group order (base set plus the narrative and annotated groups, each owned in its own folder). */
+export const EXPERIMENTS: Experiment[] = [...BASE, ...NARRATIVE_EXPERIMENTS, ...ANNOTATED_EXPERIMENTS].sort(
+  (a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group),
+)
 
 export const experiment = (id: string) => EXPERIMENTS.find((e) => e.id === id)!

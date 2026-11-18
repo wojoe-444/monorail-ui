@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { APP } from '@/app/config'
 import { SideNav } from '@/components/layout/SideNav'
 import { TopBar } from '@/components/layout/TopBar'
+import { TopBarSlotProvider, useTopBarSlotHost } from '@/components/layout/TopBarSlot'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { prefs } from '@/lib/prefs'
 import { useRoute } from '@/lib/router'
@@ -30,6 +31,7 @@ export function AppShell({ sections, topBarActions }: { sections: NavSection[]; 
   const [path, navigate] = useRoute()
   const [collapsed, setCollapsed] = useState(initialCollapsed)
   const body = useRef<HTMLDivElement>(null)
+  const slot = useTopBarSlotHost()
 
   const found = findNavItem(sections, path)
   const current = found?.item
@@ -52,29 +54,33 @@ export function AppShell({ sections, topBarActions }: { sections: NavSection[]; 
 
   return (
     <TooltipProvider>
-      <div className="flex h-full overflow-hidden">
-        <SideNav sections={sections} current={navCurrent} onNavigate={navigate} collapsed={collapsed} />
-        <div ref={body} className={cn('flex min-w-0 flex-1 flex-col', full ? 'overflow-hidden' : 'overflow-y-auto')}>
-          <TopBar
-            section={found?.section.heading}
-            parent={found?.parent ? { label: found.parent.label, path: found.parent.path } : undefined}
-            onNavigate={navigate}
-            title={current?.label ?? 'Not found'}
-            collapsed={collapsed}
-            onToggleCollapsed={toggleCollapsed}
-            actions={topBarActions}
-          />
-          {full ? (
-            <main className="min-h-0 flex-1 overflow-hidden">
-              <Page key={current?.path} />
-            </main>
-          ) : (
-            <main className="mx-auto w-full max-w-[96rem] p-6 lg:p-8">
-              <Page key={current?.path} />
-            </main>
-          )}
+      <TopBarSlotProvider value={slot.value}>
+        <div className="flex h-full overflow-hidden">
+          <SideNav sections={sections} current={navCurrent} onNavigate={navigate} collapsed={collapsed} />
+          <div ref={body} className={cn('flex min-w-0 flex-1 flex-col', full ? 'overflow-hidden' : 'overflow-y-auto')}>
+            <TopBar
+              section={found?.section.heading}
+              parent={found?.parent ? { label: found.parent.label, path: found.parent.path } : undefined}
+              onNavigate={navigate}
+              title={current?.label ?? 'Not found'}
+              collapsed={collapsed}
+              onToggleCollapsed={toggleCollapsed}
+              actions={topBarActions}
+              slotRef={slot.setTarget}
+              hideBreadcrumb={slot.hideBreadcrumb}
+            />
+            {full ? (
+              <main className="min-h-0 flex-1 overflow-hidden">
+                <Page key={current?.path} />
+              </main>
+            ) : (
+              <main className="mx-auto w-full max-w-[96rem] p-6 lg:p-8">
+                <Page key={current?.path} />
+              </main>
+            )}
+          </div>
         </div>
-      </div>
+      </TopBarSlotProvider>
     </TooltipProvider>
   )
 }

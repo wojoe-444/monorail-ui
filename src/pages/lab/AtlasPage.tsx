@@ -3,7 +3,7 @@ import { ArrowUpRight } from 'lucide-react'
 
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Card } from '@/components/ui/card'
-import { EXPERIMENTS, GROUP_LABELS, type Experiment, type ExperimentGroup } from '@/features/lab/catalog'
+import { EXPERIMENTS, GROUP_LABELS, GROUP_ORDER, type Experiment, type ExperimentGroup } from '@/features/lab/catalog'
 import {
   useGenerationDay,
   useGenerationNow,
@@ -25,15 +25,15 @@ import { cn } from '@/lib/utils'
  * round, each carrying a single live reading from its feed.
  */
 
-const GROUPS: ExperimentGroup[] = ['favorite', 'narrative', 'annotated', 'new', 'kept']
-const GROUP_COLOR: Record<ExperimentGroup, string> = {
+const GROUPS = GROUP_ORDER
+export const GROUP_COLOR: Record<ExperimentGroup, string> = {
   favorite: 'var(--primary)',
   narrative: 'var(--series-3)',
   annotated: 'var(--series-5)',
   new: 'var(--highlight)',
   kept: 'var(--muted-foreground)',
 }
-const GROUP_BLURB: Record<ExperimentGroup, string> = {
+export const GROUP_BLURB: Record<ExperimentGroup, string> = {
   favorite: 'Picked from round one. In all three, words and type carry the data.',
   narrative: 'How far the written-dashboard idea from Forecast, Written can go.',
   annotated: 'How far the annotated charts in Attention can go: annotation as the main event.',
@@ -43,11 +43,10 @@ const GROUP_BLURB: Record<ExperimentGroup, string> = {
 
 export function AtlasPage() {
   const [active, setActive] = useState<string | null>(null)
-  let n = 0
   return (
     <div className="flex flex-col gap-8">
       <PageHeader
-        eyebrow="Dashboard Lab · round two"
+        eyebrow="Dashboards"
         title={`${EXPERIMENTS.length} ways to look at live data`}
         description="Most dashboards are the same dashboard: a row of KPI tiles over a line chart over a table. Each experiment pushes one idea as far as it goes, on real public feeds, and says what it gives up. The three favorites from round one all let words do the work, so the map now asks how much a dashboard speaks in words."
       />
@@ -68,7 +67,7 @@ export function AtlasPage() {
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
               {items.map((e) => (
-                <ExperimentCard key={e.id} e={e} n={++n} active={active === e.id} onActive={setActive} />
+                <ExperimentCard key={e.id} e={e} n={EXPERIMENTS.indexOf(e) + 1} active={active === e.id} onActive={setActive} />
               ))}
             </div>
           </section>
@@ -182,7 +181,17 @@ function DesignSpace({ active, onActive }: { active: string | null; onActive: (i
 
 // ── Cards ──────────────────────────────────────────────────────────────────
 
-function ExperimentCard({ e, n, active, onActive }: { e: Experiment; n: number; active: boolean; onActive: (id: string | null) => void }) {
+export function ExperimentCard({
+  e,
+  n,
+  active = false,
+  onActive = () => {},
+}: {
+  e: Experiment
+  n: number
+  active?: boolean
+  onActive?: (id: string | null) => void
+}) {
   const Icon = e.icon
   const Pulse = PULSES[e.id]
   return (

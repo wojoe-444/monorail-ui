@@ -167,9 +167,9 @@ function NavButton({
 
 const OPEN_KEY = 'nav.open'
 
-/** Open/closed state of one nav group, remembered in prefs. Groups start open. */
-function useGroupOpen(path: string): [boolean, (open: boolean) => void] {
-  const [open, setOpenState] = useState(() => readJson<Record<string, boolean>>(OPEN_KEY, {})[path] ?? true)
+/** Open/closed state of one nav group, remembered in prefs. Groups start closed (the current page's group opens itself), so a large catalog stays scannable. */
+function useGroupOpen(path: string, fallback: boolean): [boolean, (open: boolean) => void] {
+  const [open, setOpenState] = useState(() => readJson<Record<string, boolean>>(OPEN_KEY, {})[path] ?? fallback)
   const setOpen = (next: boolean) => {
     setOpenState(next)
     writeJson(OPEN_KEY, { ...readJson<Record<string, boolean>>(OPEN_KEY, {}), [path]: next })
@@ -189,8 +189,8 @@ function NavGroup({
   onNavigate: (path: string) => void
 }) {
   const children = item.children ?? []
-  const [open, setOpen] = useGroupOpen(item.path)
   const activeChild = children.find((c) => c.path === current)
+  const [open, setOpen] = useGroupOpen(item.path, !!activeChild || item.path === current)
 
   // Arriving on a subpage from elsewhere (a link) opens its group.
   // Only when the current subpage changes, so the person can still close it.

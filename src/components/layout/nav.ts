@@ -10,6 +10,8 @@ export interface NavItem {
   icon?: IconComponent
   /** The page to render at this path. */
   page: ComponentType
+  /** One line on what the page is for (the catalog index shows it). */
+  description?: string
   /** A short count or label on the item, e.g. "3". */
   badge?: string
   /** Subpages, drawn as a collapsible tree under this item. One level deep. */
