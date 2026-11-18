@@ -14,7 +14,7 @@ export interface NavItem {
   description?: string
   /** A short count or label on the item, e.g. "3". */
   badge?: string
-  /** Subpages, drawn as a collapsible tree under this item. One level deep. */
+  /** Subpages, listed in a panel that opens right of the drawer (SideNav `NavFlyout`). One level deep. */
   children?: NavItem[]
   /** `full`: the page fills the body edge to edge, with no padding or max width. */
   layout?: 'page' | 'full'

@@ -16,9 +16,8 @@ const COLLAPSED_KEY = 'nav.collapsed'
 
 function initialCollapsed(): boolean {
   const stored = prefs.getItem(COLLAPSED_KEY)
-  if (stored !== null) return stored === 'true'
-  // Small screens start on the icon rail so the page keeps its width.
-  return typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches
+  // The icon rail is the default: names show in tooltips and subpages open in a side panel.
+  return stored === null ? true : stored === 'true'
 }
 
 /**
