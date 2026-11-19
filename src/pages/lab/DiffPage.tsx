@@ -359,7 +359,7 @@ function FileBlock({
 }) {
   const quiet = f.added + f.removed === 0
   return (
-    <section id={anchor(f.file)} className="scroll-mt-24 overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10">
+    <section id={anchor(f.file)} className="scroll-mt-18 overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10">
       <header className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b bg-muted/60 px-3 py-2">
         <button
           type="button"

@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 interface SearchFieldProps extends Omit<React.ComponentProps<'input'>, 'size'> {
   /** `sm` for toolbars and the top bar, `lg` for a page's main search (`PageBanner`). */
   size?: 'sm' | 'default' | 'lg'
-  /** Keyboard hint shown at the right edge, e.g. "Ctrl K". Display only. */
+  /** Keyboard hint shown at the right edge, e.g. "/". Display only. Ctrl K belongs to the command palette. */
   shortcut?: string
 }
 

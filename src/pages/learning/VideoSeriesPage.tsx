@@ -264,7 +264,7 @@ export function VideoSeriesPage() {
         </div>
 
         {/* Aside */}
-        <div className="flex min-w-0 flex-col gap-6 xl:sticky xl:top-20">
+        <div className="flex min-w-0 flex-col gap-6 xl:sticky xl:top-14">
           <Card className="gap-4 pb-2">
             <CardHeader>
               <CardTitle>Episodes</CardTitle>

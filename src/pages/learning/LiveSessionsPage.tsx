@@ -259,7 +259,7 @@ export function LiveSessionsPage() {
           </Card>
         </div>
 
-        <div ref={aside} className="order-2 flex min-w-0 scroll-mt-20 flex-col gap-6 xl:sticky xl:top-20 xl:order-none">
+        <div ref={aside} className="order-2 flex min-w-0 scroll-mt-14 flex-col gap-6 xl:sticky xl:top-14 xl:order-none">
           <SessionDetail session={selected} zone={zone} mine={mine[selected.id]} onToggle={() => toggle(selected)} />
 
           <Card className="gap-4">

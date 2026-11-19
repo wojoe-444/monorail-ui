@@ -85,7 +85,7 @@ export function WikiGlossaryPage() {
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-[12rem_minmax(0,1fr)]">
         <nav aria-label="Terms" className="hidden md:block">
-          <ul className="sticky top-24 flex flex-col">
+          <ul className="sticky top-18 flex flex-col">
             {terms.map((t) => (
               <li key={t.term}>
                 <button

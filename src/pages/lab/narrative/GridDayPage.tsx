@@ -102,7 +102,7 @@ function Story({ slots, carbon }: { slots: DaySlot[]; carbon: CarbonSlot[] }) {
     <div className="flex flex-col gap-10">
       <div className="grid grid-cols-1 gap-x-12 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)]">
         {/* The sticky picture. On phones it pins under the top bar, compact. */}
-        <div className="sticky top-16 z-[1] -mx-6 bg-background/95 px-6 pt-3 pb-3 backdrop-blur lg:top-24 lg:order-2 lg:mx-0 lg:self-start lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
+        <div className="sticky top-10 z-[1] -mx-6 bg-background/95 px-6 pt-3 pb-3 backdrop-blur lg:top-18 lg:order-2 lg:mx-0 lg:self-start lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
           <Card className="gap-3 px-4 py-4 sm:px-5">
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">

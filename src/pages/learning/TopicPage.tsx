@@ -540,7 +540,7 @@ export function TopicPage() {
             <Reference />
           </Shelf>
         </div>
-        <aside className="flex min-w-0 flex-col gap-4 xl:sticky xl:top-20">
+        <aside className="flex min-w-0 flex-col gap-4 xl:sticky xl:top-14">
           <Experts />
           <Related />
           <NotHere />

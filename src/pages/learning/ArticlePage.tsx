@@ -145,7 +145,7 @@ export function ArticlePage() {
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.round(progress * 100)}
-        className="sticky top-16 z-10 -mx-6 -mt-6 -mb-8 h-0.5 lg:-mx-8 lg:-mt-8"
+        className="sticky top-10 z-10 -mx-6 -mt-6 -mb-8 h-0.5 lg:-mx-8 lg:-mt-8"
       >
         <div className="h-full bg-primary transition-[width] duration-150" style={{ width: `${progress * 100}%` }} />
       </div>
@@ -181,7 +181,7 @@ export function ArticlePage() {
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[12rem_minmax(0,1fr)]">
         {/* Contents + where you are */}
         <aside className="hidden lg:block">
-          <div className="sticky top-24 flex flex-col gap-6">
+          <div className="sticky top-18 flex flex-col gap-6">
             <nav aria-label="Contents">
               <div className="mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Contents</div>
               <ol className="flex flex-col border-l">

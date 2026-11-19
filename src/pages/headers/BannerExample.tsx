@@ -65,7 +65,7 @@ export function BannerExample() {
           </Card>
         }
       >
-        <SearchField size="lg" shortcut="Ctrl K" placeholder="Search projects, people and files…" aria-label="Search everything" />
+        <SearchField size="lg" shortcut="/" placeholder="Search projects, people and files…" aria-label="Search everything" />
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm">
             <Plus />

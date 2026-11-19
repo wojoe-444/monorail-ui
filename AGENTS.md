@@ -29,7 +29,8 @@ React 19, TypeScript (strict), Vite, Tailwind CSS v4, Radix primitives (`radix-u
 | `src/pages/CatalogPage.tsx` | The front page: the catalog, generated from `NAV`. |
 | `src/pages/` | One file per page. |
 | `src/components/layout/` | `AppShell`, `SideNav`, `TopBar`, `TopBarPortal`, `PageHeader` and the other header styles (see "Choosing a page header"), `PageTabs`, `PageSteps`, `StatusStrip`, `BrandMark`, nav types. |
-| `src/components/ui/` | The UI kit (Button, Card, Dialog, `SearchField`, `Table`, `TableCard`, `FileTree`, …). |
+| `src/components/ui/` | The UI kit (Button, Card, Dialog, Popover, `SearchField`, `SaveBar`, `Table`, `TableCard`, `FileTree`, …). |
+| `src/components/search/` | The command palette (Ctrl+K, or the top bar's search field): one search over every page and subpage in `NAV`. Open it from code with `openSearch({ section, query })`. |
 | `src/features/wiki/`, `src/pages/wiki/` | Wiki layouts (sample Chicago 'L' content): portal, article, entity profile, dataset, three-pane docs, directory, glossary, timeline. Copy a layout from here when building a content page. |
 | `src/components/charts/` | `StatTile`, `Sparkline`, `DivergenceBar`, `Legend`, `ChartTooltipContent`, series colors. |
 | `src/components/theme/ThemePicker.tsx` | Appearance card used on the Settings page. |
@@ -159,19 +160,21 @@ Small states in cells use the status hues as text, not chips: `text-success` (go
 
 Opacity modifiers are fine (`bg-primary/10`). Status hues mean the same thing in every palette: green = good, amber = needs attention, red = error or destructive, blue = information. Don't use them for decoration.
 
-**Components first.** Use the kit before writing markup: `Button` (variants `default`, `soft`, `outline`, `secondary`, `ghost`, `link`, `destructive`; sizes `sm`, `default`, `lg`, `icon`), `Card` + `CardHeader`/`CardTitle`/`CardDescription`/`CardAction`/`CardContent`/`CardFooter`, `Badge` for status, `Dialog` for modal tasks, `DropdownMenu` for row actions, `Tooltip` for icon-only buttons, `Segmented` for a compact 2–4 option toggle (view mode, filter, time range), `NativeSelect` for picking from a list, `Switch` for on/off settings, `StatTile` for KPIs, `FileTree` for a collapsible tree of folders and pages (docs sidebars, file browsers; pass a filter `Input`'s value as `filter`), and for pages full of lists `TableCard` + `Table`, `StatusStrip` and `DivergenceBar` (see "Dense data pages").
+**Components first.** Use the kit before writing markup: `Button` (variants `default`, `soft`, `outline`, `secondary`, `ghost`, `link`, `destructive`; sizes `sm`, `default`, `lg`, `icon`), `Card` + `CardHeader`/`CardTitle`/`CardDescription`/`CardAction`/`CardContent`/`CardFooter`, `Badge` for status, `Dialog` for modal tasks, `DropdownMenu` for row actions, `Tooltip` for icon-only buttons, `Segmented` for a compact 2–4 option toggle (view mode, filter, time range), `Popover` for a free-form floating panel (searchable pickers, small forms), `NativeSelect` for picking from a list, `Switch` for on/off settings, `StatTile` for KPIs, `FileTree` for a collapsible tree of folders and pages (docs sidebars, file browsers; pass a filter `Input`'s value as `filter`), and for pages full of lists `TableCard` + `Table`, `StatusStrip` and `DivergenceBar` (see "Dense data pages").
 
-Need a component the kit doesn't have (tabs that switch panels inside a card, table, popover, sheet, command, calendar)? Add it with **`npm run ui:add -- <name>`**, not `npx shadcn add` directly. The wrapper runs the shadcn CLI, so the file lands in `src/components/ui/` styled with the theme tokens. Then it points the new file's `cn` import at `@/lib/utils`, because shadcn 4 otherwise adds a separate `cn` npm package. Afterwards, check the new component's colors are token classes. Restyle surfaces to match the kit if needed (e.g. active states use `bg-card shadow-elevation-1` like `Segmented`).
+Need a component the kit doesn't have (tabs that switch panels inside a card, sheet, command, calendar)? Add it with **`npm run ui:add -- <name>`**, not `npx shadcn add` directly. The wrapper runs the shadcn CLI, so the file lands in `src/components/ui/` styled with the theme tokens. Then it points the new file's `cn` import at `@/lib/utils`, because shadcn 4 otherwise adds a separate `cn` npm package. Afterwards, check the new component's colors are token classes. Restyle surfaces to match the kit if needed (e.g. active states use `bg-card shadow-elevation-1` like `Segmented`).
 
 **Layout and spacing.**
 - Blocks on a page: `flex flex-col gap-8`. Cards in a grid: `gap-4`. Inside a card: `gap-4` or `gap-6`.
 - Responsive grids always set a base column: `grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4`. Without `grid-cols-1`, the column grows to fit its content and the page scrolls sideways on phones.
 - Give flex children that hold long text `min-w-0` and the text `truncate`.
+- **The shell.** The top bar is 40px and always visible; the icon rail is 60px. Things that stick under the top bar use `top-10` (`top-18` when they also clear the page's 32px padding).
+- **Saving forms.** A form that keeps a draft and saves as a unit ends with `SaveBar` (`src/components/ui/save-bar.tsx`): sticky at the bottom while there are unsaved changes ("2 unsaved changes", Discard, Save; `blocked` says why Save can't run), then "Saved. Safe to leave." only once the save is confirmed (`savedAt: savedNow()`), and errors with Try again. Count changes with `countChanges(saved, draft)` from `src/lib/changes.ts`. Keep it outside anything with `overflow: hidden`. Dialogs keep their footer buttons; switches that act at once stay immediate.
 - One primary (`default`) button per view. Everything else is `outline`, `ghost`, `soft` or `secondary`.
 - Page titles come from `PageHeader` or one of the other headers (see "Choosing a page header"). Don't add another `h1`.
 - Radius comes from the theme (`rounded-md`, `rounded-lg`, `rounded-xl`). Don't use arbitrary values.
 
-**Type.** Inter is the UI font, JetBrains Mono (`font-mono`) is for code and ids. Use `tabular-nums` for numbers that line up. Sizes: `text-2xl` page titles (in PageHeader), `text-sm` body, `text-xs` meta and labels.
+**Type.** Inter is the UI font. `font-mono` is for code and ids: Cascadia Mono, a system font (Consolas or the platform mono elsewhere), nothing bundled. Don't bring back JetBrains Mono: not in a font stack, an SVG or a package. Use `tabular-nums` for numbers that line up. Sizes: `text-2xl` page titles (in PageHeader), `text-sm` body, `text-xs` meta and labels.
 
 **Accessibility.** Every input has a `Label`. Icon-only buttons get an `aria-label` (and usually a `Tooltip`). Use `button` for actions and links for navigation. Don't remove focus rings.
 

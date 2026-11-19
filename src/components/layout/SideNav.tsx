@@ -17,10 +17,10 @@ interface SideNavProps {
 }
 
 /**
- * Permanent navigation drawer: a 64px brand header aligned with the top bar,
+ * Permanent navigation drawer: a 40px brand header aligned with the top bar,
  * grouped sections with overline labels, 40px items on soft pills, and the
  * active item filled with the drawer's primary color. By default it is a
- * 56px icon rail where hovering or focusing an icon shows its name in a
+ * 60px icon rail where hovering or focusing an icon shows its name in a
  * tooltip; the toggle in the top bar opens it to 256px with labels.
  *
  * Items with subpages never expand inside the drawer: they open a panel just
@@ -38,29 +38,29 @@ export function SideNav({ sections, current, onNavigate, collapsed }: SideNavPro
       data-slot="sidebar"
       className={cn(
         'flex h-full shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width] duration-200',
-        collapsed ? 'w-14' : 'w-[256px]',
+        collapsed ? 'w-[60px]' : 'w-[256px]',
       )}
     >
-      {/* Brand header: height matches the 64px top bar */}
+      {/* Brand header: height matches the 40px top bar */}
       <div
         className={cn(
-          'flex h-16 shrink-0 items-center gap-3 border-b border-sidebar-border px-4',
+          'flex h-10 shrink-0 items-center gap-2.5 border-b border-sidebar-border px-4',
           collapsed && 'justify-center px-0',
         )}
       >
-        <BrandTile name={APP.name} className="size-8" />
+        <BrandTile name={APP.name} className="size-7" />
         {!collapsed && (
-          <div className="flex min-w-0 flex-col leading-tight">
-            <span className="truncate text-sm font-semibold text-sidebar-accent-foreground">{APP.name}</span>
-            <span className="truncate text-xs text-sidebar-muted-foreground">{APP.tagline}</span>
+          <div className="flex min-w-0 flex-col">
+            <span className="truncate text-[13px] leading-4 font-semibold text-sidebar-accent-foreground">{APP.name}</span>
+            <span className="truncate text-[11px] leading-4 text-sidebar-muted-foreground">{APP.tagline}</span>
           </div>
         )}
       </div>
 
       <nav
         className={cn(
-          'min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-4 py-4',
-          collapsed && 'px-2',
+          'min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-4 py-3',
+          collapsed && 'px-2.5',
           // Keep the narrow rail centered without a native scrollbar taking icon space.
           // Overflow still scrolls with the wheel, touch, and keyboard focus.
           collapsed && '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
@@ -71,13 +71,13 @@ export function SideNav({ sections, current, onNavigate, collapsed }: SideNavPro
           const items = visibleItems(section.items)
           if (items.length === 0) return null
           return (
-            <div key={section.heading ?? i} className={cn(i > 0 && 'mt-4')}>
+            <div key={section.heading ?? i} className={cn(i > 0 && 'mt-3')}>
               {section.heading && !collapsed && (
                 <div className="flex h-8 items-center px-3 text-[11px] font-semibold tracking-wider text-sidebar-muted-foreground uppercase">
                   {section.heading}
                 </div>
               )}
-              {section.heading && collapsed && <div className="mx-1 mb-3 h-px bg-sidebar-border" />}
+              {section.heading && collapsed && <div className="mx-2 mb-2 h-px bg-sidebar-border" />}
               <ul className="flex flex-col gap-1">
                 {items.map((item) => (
                   <li key={item.path}>
@@ -96,7 +96,7 @@ export function SideNav({ sections, current, onNavigate, collapsed }: SideNavPro
 
       {pinned.length > 0 && (
         // Pinned items (Settings) sit above the bottom edge, outside the scrolling list.
-        <div className={cn('flex shrink-0 flex-col gap-1 border-t border-sidebar-border px-4 py-3', collapsed && 'px-2')}>
+        <div className={cn('flex shrink-0 flex-col gap-1 border-t border-sidebar-border px-4 py-2', collapsed && 'px-2.5')}>
           {pinned.map((item) => (
             <NavButton
               key={item.path}
@@ -112,9 +112,9 @@ export function SideNav({ sections, current, onNavigate, collapsed }: SideNavPro
   )
 }
 
-/** Items sit 16px (open drawer) or 8px (rail) inside the drawer's edge; this puts a tooltip or panel 8px past it. */
+/** Items sit 16px (open drawer) or 10px (rail) inside the drawer's edge; this puts a tooltip or panel 8px past it. */
 function edgeOffset(collapsed: boolean) {
-  return collapsed ? 16 : 24
+  return collapsed ? 18 : 24
 }
 
 function NavButton({
@@ -146,7 +146,7 @@ function NavButton({
     >
       <Icon className="size-4 shrink-0" />
       {collapsed && item.badge && (
-        <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-warning" aria-label={`${item.badge} need attention`} />
+        <span className="absolute top-1 right-1 size-2 rounded-full bg-warning" aria-label={`${item.badge} need attention`} />
       )}
       {!collapsed && <span className="flex-1 truncate text-left">{item.label}</span>}
       {!collapsed && item.badge && (
@@ -216,7 +216,8 @@ function NavFlyout({
             {activeChild && <span className="truncate text-[11px] font-normal opacity-75">{activeChild.label}</span>}
           </span>
         )}
-        <ChevronRight className={cn('shrink-0 opacity-60', collapsed ? 'absolute right-0.5 size-3' : 'size-4')} />
+        {/* The open drawer marks items with subpages; rail icons stay clean (the tooltip names the item). */}
+        {!collapsed && <ChevronRight className="size-4 shrink-0 opacity-60" />}
       </button>
     </DropdownMenuTrigger>
   )

@@ -26,8 +26,8 @@ interface SplitPageProps {
 export function SplitPage({ title, description, nav, navLabel = `${title} sections`, aside, children }: SplitPageProps) {
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-12">
-      {/* top-24 = 64px top bar + 32px page padding */}
-      <header className="flex min-w-0 flex-col lg:sticky lg:top-24 lg:self-start">
+      {/* top-18 = 40px top bar + 32px page padding */}
+      <header className="flex min-w-0 flex-col lg:sticky lg:top-18 lg:self-start">
         <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
         {description && <div className="mt-2 text-sm text-pretty text-muted-foreground">{description}</div>}
         {nav && <PageTabs tabs={nav} variant="side" aria-label={navLabel} className="mt-5" />}

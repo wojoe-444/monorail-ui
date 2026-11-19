@@ -1,8 +1,8 @@
 # MonoRail UI
 
-A working app and the template new apps start from. It opens on a catalog of everything the kit can do: components, page types and 25 dashboards on live public data. New apps keep the sections they want and delete the rest. It comes from [MonoRail](https://github.com/wojoe-444/MonoRail/tree/59b00678a7467050b8dd187f5dd8de42f6e056ca/apps/command-hub/src) and includes:
+A working app and the template new apps start from. It opens on a catalog of everything the kit can do: components, page types and 25 dashboards on live public data. New apps keep the sections they want and delete the rest. It comes from [MonoRail](https://github.com/wojoe-444/MonoRail/tree/cb5cb77e12e66e8d362fa2e394881b3a3198cc39/apps/command-hub/src) and includes:
 
-- **App layout:** a side drawer that rests as an icon rail (names on hover, subpages in a panel beside it) and opens to full labels, a top bar with breadcrumbs, and a light/dark toggle.
+- **App layout:** a side drawer that rests as an icon rail (names on hover, subpages in a panel beside it) and opens to full labels, a slim always-visible top bar with linked breadcrumbs, a search field that opens a command palette (Ctrl+K) over every page, and a light/dark toggle.
 - **Theme:** 61 color schemes in light and dark (including hue and picture themes), picked in Settings and remembered, all built on one set of color tokens.
 - **Components:** buttons, cards, form controls, dialogs, menus, tooltips, a file tree, KPI tiles and sparklines, as editable source in `src/components/`.
 - **Page headers:** nine header styles for different kinds of page (dashboard, list, detail, settings, reading, create flow and more), with live examples under Building blocks > Page headers.
@@ -74,4 +74,4 @@ The new app owns its copy. Later changes to this template don't flow into apps a
 
 ## Licenses
 
-See [licenses](./licenses) for the notices for shadcn/ui, Tailwind CSS, tw-animate-css, and the Inter and JetBrains Mono fonts.
+See [licenses](./licenses) for the notices for shadcn/ui, Tailwind CSS, tw-animate-css, and the Inter font.
