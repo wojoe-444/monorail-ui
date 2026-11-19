@@ -69,7 +69,7 @@ export function WikiArticlePage() {
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[12rem_minmax(0,1fr)] xl:grid-cols-[12rem_minmax(0,1fr)_18rem]">
         <aside className="hidden lg:block">
-          <TableOfContents items={TOC} className="sticky top-24" />
+          <TableOfContents items={TOC} className="sticky top-18" />
         </aside>
 
         <aside className="xl:order-last">
@@ -192,7 +192,7 @@ export function WikiArticlePage() {
 
 function Infobox() {
   return (
-    <Card className="gap-4 xl:sticky xl:top-24">
+    <Card className="gap-4 xl:sticky xl:top-18">
       <CardHeader>
         <CardTitle>Red Line</CardTitle>
       </CardHeader>

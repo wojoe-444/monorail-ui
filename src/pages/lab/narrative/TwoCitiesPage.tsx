@@ -377,7 +377,7 @@ function Parallel({ a, b, fa, fb, airA, airB, unit }: { a: City; b: City; fa: Fo
   return (
     <article className="flex flex-col">
       {/* Column heads */}
-      <div className="sticky top-16 z-[1] hidden grid-cols-[minmax(0,1fr)_12rem_minmax(0,1fr)] gap-x-8 border-b bg-background/90 py-3 backdrop-blur lg:grid">
+      <div className="sticky top-10 z-[1] hidden grid-cols-[minmax(0,1fr)_12rem_minmax(0,1fr)] gap-x-8 border-b bg-background/90 py-3 backdrop-blur lg:grid">
         <ColumnHead city={a} color={A_COLOR} x={A} right />
         <div className="text-center text-xs font-semibold tracking-[0.08em] text-muted-foreground uppercase">The difference</div>
         <ColumnHead city={b} color={B_COLOR} x={B} />

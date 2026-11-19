@@ -361,7 +361,7 @@ export function HowToPage() {
       </div>
 
       {/* Phone: a sticky progress strip. */}
-      <div className="sticky top-16 z-[5] -mx-6 flex items-center gap-3 border-b bg-background/85 px-6 py-2 backdrop-blur lg:hidden">
+      <div className="sticky top-10 z-[5] -mx-6 flex items-center gap-3 border-b bg-background/85 px-6 py-2 backdrop-blur lg:hidden">
         <span className="text-sm font-medium tabular-nums">
           {count}/{STEPS.length}
         </span>
@@ -603,7 +603,7 @@ export function HowToPage() {
         </div>
 
         {/* Desktop: progress rail. */}
-        <aside className="sticky top-24 hidden flex-col gap-4 lg:flex">
+        <aside className="sticky top-18 hidden flex-col gap-4 lg:flex">
           <Card className="gap-4 p-4">
             {clock}
             <div className="flex flex-col gap-1.5">

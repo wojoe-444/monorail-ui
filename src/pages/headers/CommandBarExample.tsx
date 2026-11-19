@@ -31,7 +31,7 @@ export function CommandBarExample() {
         description="Everything on the Atlas redesign. Title, tabs and actions live in the top bar."
         actions={
           <>
-            <SearchField size="sm" shortcut="Ctrl K" placeholder="Find…" aria-label="Find on this board" className="hidden w-56 xl:flex" />
+            <SearchField size="sm" shortcut="/" placeholder="Find…" aria-label="Find on this board" className="hidden w-56 xl:flex" />
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon" className="size-8" aria-label="Refresh">

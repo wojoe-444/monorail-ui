@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
  */
 
 const SANS = '"Inter Variable", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif'
-const MONO = '"JetBrains Mono Variable", ui-monospace, monospace'
+const MONO = '"Cascadia Mono", Consolas, ui-monospace, monospace'
 
 let ctx: CanvasRenderingContext2D | null = null
 const cache = new Map<string, number>()

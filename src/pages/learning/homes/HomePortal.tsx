@@ -357,7 +357,7 @@ export function HomePortal() {
       >
         <SearchField
           size="lg"
-          shortcut="Ctrl K"
+          shortcut="/"
           placeholder="Search by skill, tool or question…"
           aria-label={`Search ${HUB.name}`}
           value={query}

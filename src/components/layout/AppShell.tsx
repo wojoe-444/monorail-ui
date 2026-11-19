@@ -4,13 +4,14 @@ import { APP } from '@/app/config'
 import { SideNav } from '@/components/layout/SideNav'
 import { TopBar } from '@/components/layout/TopBar'
 import { TopBarSlotProvider, useTopBarSlotHost } from '@/components/layout/TopBarSlot'
+import { CommandPalette } from '@/components/search/CommandPalette'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { prefs } from '@/lib/prefs'
 import { useRoute } from '@/lib/router'
 import { cn } from '@/lib/utils'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
-import { findNavItem, type NavSection } from './nav'
+import { findNavItem, visibleItems, type NavSection } from './nav'
 
 const COLLAPSED_KEY = 'nav.collapsed'
 
@@ -38,6 +39,9 @@ export function AppShell({ sections, topBarActions }: { sections: NavSection[]; 
   const full = current?.layout === 'full'
   // A hidden subpage (a detail page) lights up its parent in the drawer.
   const navCurrent = current?.hidden && found?.parent ? found.parent.path : (current?.path ?? path)
+  // The breadcrumb's section links to the section's first page.
+  const sectionHome = found?.section.heading ? visibleItems(found.section.items)[0] : undefined
+  const section = sectionHome ? { label: found!.section.heading!, path: sectionHome.path } : undefined
 
   // A new page starts at the top, and the document title follows it.
   useEffect(() => {
@@ -58,7 +62,7 @@ export function AppShell({ sections, topBarActions }: { sections: NavSection[]; 
           <SideNav sections={sections} current={navCurrent} onNavigate={navigate} collapsed={collapsed} />
           <div ref={body} data-slot="app-body" className={cn('flex min-w-0 flex-1 flex-col', full ? 'overflow-hidden' : 'overflow-y-auto')}>
             <TopBar
-              section={found?.section.heading}
+              section={section}
               parent={found?.parent ? { label: found.parent.label, path: found.parent.path } : undefined}
               onNavigate={navigate}
               title={current?.label ?? 'Not found'}
@@ -79,6 +83,7 @@ export function AppShell({ sections, topBarActions }: { sections: NavSection[]; 
             )}
           </div>
         </div>
+        <CommandPalette sections={sections} />
       </TopBarSlotProvider>
     </TooltipProvider>
   )

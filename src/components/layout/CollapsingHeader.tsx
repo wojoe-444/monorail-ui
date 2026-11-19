@@ -14,7 +14,7 @@ interface CollapsingHeaderProps {
 }
 
 /** TopBar height: the title counts as gone once it slides under the bar. */
-const TOP_BAR = 64
+const TOP_BAR = 40
 
 /**
  * Header style G: a large, editorial title that hands off to the top bar

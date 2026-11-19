@@ -131,7 +131,7 @@ export function CatalogPage() {
         </section>
       ) : (
         sections().map((s) => (
-          <section key={s.heading} id={`catalog-${slug(s.heading!)}`} className="flex scroll-mt-20 flex-col gap-4">
+          <section key={s.heading} id={`catalog-${slug(s.heading!)}`} className="flex scroll-mt-14 flex-col gap-4">
             <h2 className="text-lg font-semibold tracking-tight">{s.heading}</h2>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
               {s.items.map((item) => (

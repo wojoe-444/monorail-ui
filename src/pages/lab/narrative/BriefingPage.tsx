@@ -230,7 +230,7 @@ function Player({ city, setCity, segments }: { city: City; setCity: (id: string)
       </article>
 
       <aside className="order-1 lg:order-2">
-        <Card className="gap-5 px-5 py-5 lg:sticky lg:top-24">
+        <Card className="gap-5 px-5 py-5 lg:sticky lg:top-18">
           <div className="flex items-center gap-3">
             <Button size="lg" onClick={toggle} disabled={!canSpeak} aria-label={state === 'playing' ? 'Pause (Space)' : 'Play (Space)'} className="min-w-28">
               {state === 'playing' ? <Pause /> : <Play />}

@@ -237,8 +237,8 @@ export function PodcastPage() {
   useEffect(() => {
     const el = playerRef.current
     if (!el) return
-    const io = new IntersectionObserver(([e]) => setPlayerGone(!e.isIntersecting && e.boundingClientRect.top < 64), {
-      rootMargin: '-64px 0px 0px 0px',
+    const io = new IntersectionObserver(([e]) => setPlayerGone(!e.isIntersecting && e.boundingClientRect.top < 40), {
+      rootMargin: '-40px 0px 0px 0px',
     })
     io.observe(el)
     return () => io.disconnect()

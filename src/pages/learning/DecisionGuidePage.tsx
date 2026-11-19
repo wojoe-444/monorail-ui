@@ -379,7 +379,7 @@ export function DecisionGuidePage() {
           )}
         </div>
 
-        <aside className="flex flex-col gap-4 xl:sticky xl:top-24">
+        <aside className="flex flex-col gap-4 xl:sticky xl:top-18">
           <Card className="gap-0 pb-0">
             <CardHeader className="pb-4">
               <CardTitle>Candidates</CardTitle>
