@@ -43,6 +43,7 @@ export function SideNav({ sections, current, onNavigate, collapsed }: SideNavPro
     >
       {/* Brand header: height matches the 40px top bar */}
       <div
+        data-slot="sidebar-brand"
         className={cn(
           'flex h-10 shrink-0 items-center gap-2.5 border-b border-sidebar-border px-4',
           collapsed && 'justify-center px-0',

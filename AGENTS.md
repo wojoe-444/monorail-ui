@@ -109,7 +109,7 @@ export function ThingPage() {
 
 Full examples: `src/pages/TabbedPageExample.tsx` and `src/pages/StepsPageExample.tsx`.
 
-`PageTabs` also has `variant="underline"` (used by `EntityHeader`), `variant="side"` (a vertical list, used by `SplitPage`) and `size="sm"` (fits the top bar, used with `PageCommandBar`).
+`PageTabs` also has `variant="underline"` (used by `EntityHeader`), `variant="side"` (a vertical list, used by `SplitPage`), `size="sm"` (fits the top bar, used with `PageCommandBar`) and `hideIcons` (fits more tabs). A row too wide for its space scrolls sideways (also with the mouse wheel), fades at the edges and keeps the active tab in view.
 
 ### Choosing a page header
 
@@ -169,6 +169,7 @@ Need a component the kit doesn't have (tabs that switch panels inside a card, sh
 - Responsive grids always set a base column: `grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4`. Without `grid-cols-1`, the column grows to fit its content and the page scrolls sideways on phones.
 - Give flex children that hold long text `min-w-0` and the text `truncate`.
 - **The shell.** The top bar is 40px and always visible; the icon rail is 60px. Things that stick under the top bar use `top-10` (`top-18` when they also clear the page's 32px padding).
+- **Scrollbars** are one app-wide floating pill (`theme.css`). Don't set `scrollbar-width` or `scrollbar-color` globally (Chromium then ignores the pill); hide a bar on one container with `[&::-webkit-scrollbar]:hidden`.
 - **Saving forms.** A form that keeps a draft and saves as a unit ends with `SaveBar` (`src/components/ui/save-bar.tsx`): sticky at the bottom while there are unsaved changes ("2 unsaved changes", Discard, Save; `blocked` says why Save can't run), then "Saved. Safe to leave." only once the save is confirmed (`savedAt: savedNow()`), and errors with Try again. Count changes with `countChanges(saved, draft)` from `src/lib/changes.ts`. Keep it outside anything with `overflow: hidden`. Dialogs keep their footer buttons; switches that act at once stay immediate.
 - One primary (`default`) button per view. Everything else is `outline`, `ghost`, `soft` or `secondary`.
 - Page titles come from `PageHeader` or one of the other headers (see "Choosing a page header"). Don't add another `h1`.

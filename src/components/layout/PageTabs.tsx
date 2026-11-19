@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from 'react'
+
 import { usePageTab, type PageTab } from '@/hooks/usePageTab'
 import { cn } from '@/lib/utils'
 
@@ -12,6 +14,8 @@ interface PageTabsProps {
   variant?: 'chips' | 'underline' | 'side'
   /** `sm` fits the 40px top bar (`PageCommandBar`). Chips only. */
   size?: 'default' | 'sm'
+  /** Leave out the icons (to fit more tabs, e.g. in the top bar). */
+  hideIcons?: boolean
   /**
    * Stick under the top bar while the page scrolls (default for chips). The
    * bar bleeds to the edges of the page column. Pass `false` on
@@ -25,18 +29,66 @@ interface PageTabsProps {
 /**
  * Left-to-right sub-navigation inside a page: icon + label + count. Goes
  * right under `PageHeader`. Each tab is a link (`?tab=<id>`); read the active
- * tab with `usePageTab(tabs)`. On narrow screens the row scrolls sideways.
+ * tab with `usePageTab(tabs)`. On narrow screens the row scrolls sideways: a
+ * mouse wheel scrolls it, the edges fade where tabs are out of sight, and the
+ * active tab is kept in view.
  */
-export function PageTabs({ tabs, variant = 'chips', size = 'default', sticky = true, className, ...rest }: PageTabsProps) {
+export function PageTabs({ tabs, variant = 'chips', size = 'default', hideIcons = false, sticky = true, className, ...rest }: PageTabsProps) {
   const [active, , hrefFor] = usePageTab(tabs)
+  const ref = useRef<HTMLElement>(null)
+  // Which edges have tabs scrolled out of sight, so a fade can say there is more.
+  const [more, setMore] = useState({ left: false, right: false })
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const measure = () => setMore({ left: el.scrollLeft > 1, right: el.scrollLeft + el.clientWidth < el.scrollWidth - 1 })
+    // A mouse wheel scrolls the row sideways.
+    const wheel = (e: WheelEvent) => {
+      if (el.scrollWidth <= el.clientWidth || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return
+      e.preventDefault()
+      el.scrollLeft += e.deltaY
+    }
+    measure()
+    el.addEventListener('scroll', measure, { passive: true })
+    el.addEventListener('wheel', wheel, { passive: false })
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => {
+      el.removeEventListener('scroll', measure)
+      el.removeEventListener('wheel', wheel)
+      ro.disconnect()
+    }
+  }, [])
+
+  // Keep the active tab in view. Scrolls only the row, never the page.
+  useEffect(() => {
+    const el = ref.current
+    const tab = el?.querySelector<HTMLElement>('[aria-current="page"]')
+    if (!el || !tab || el.scrollWidth <= el.clientWidth) return
+    const left = tab.offsetLeft // the nav is `relative`, so this is from its left edge
+    if (left < el.scrollLeft) el.scrollLeft = left
+    else if (left + tab.offsetWidth > el.scrollLeft + el.clientWidth) el.scrollLeft = left + tab.offsetWidth - el.clientWidth
+  }, [active])
+
+  const fade =
+    more.left && more.right
+      ? '[mask-image:linear-gradient(to_right,transparent,black_2rem,black_calc(100%-2rem),transparent)]'
+      : more.right
+        ? '[mask-image:linear-gradient(to_right,black_calc(100%-2rem),transparent)]'
+        : more.left
+          ? '[mask-image:linear-gradient(to_right,transparent,black_2rem)]'
+          : ''
 
   const row = (
     <nav
+      ref={ref}
       aria-label={rest['aria-label']}
       className={cn(
-        'flex overflow-x-auto [scrollbar-width:none]',
+        'relative flex overflow-x-auto [scrollbar-width:none]',
         variant === 'underline' ? 'gap-6' : 'gap-1',
         variant === 'side' && 'lg:flex-col',
+        fade,
       )}
     >
       {tabs.map((tab) => {
@@ -70,7 +122,7 @@ export function PageTabs({ tabs, variant = 'chips', size = 'default', sticky = t
               ],
             )}
           >
-            {Icon && <Icon className="size-4" />}
+            {Icon && !hideIcons && <Icon className="size-4" />}
             {tab.label}
             {tab.count !== undefined && (
               <span
